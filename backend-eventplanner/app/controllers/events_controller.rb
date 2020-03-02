@@ -8,16 +8,13 @@ class EventsController < ApplicationController
   end
 
   def show
-    @event = Event.find(params[:id])
+    @event = Event.find(params[:id]);
     render json: @event
   end
 
   def create
-    @event = Event.new(
-      id:params[:id], title:params[:title], date:params[:date], start_time:params[:start_time], 
-      end_time:params[:end_time], min_age:params[:min_age], max_attendees:params[:max_attendees], 
-      img_url:params[:img_url], location:params[:location]
-    )
+    @event = Event.new(event_params);
+    
     if @event.save
       render json: @event.to_json
     else
@@ -28,6 +25,12 @@ class EventsController < ApplicationController
   def destroy
     @event = Event.find(params[:id])
     @event.destroy
-    render json: ("Event successfully deleted")   # do we want to return the destroyed json for an undo opetion?
+    render json: ("Event successfully deleted")   # do we want to return the destroyed json for an undo option?
+  end
+
+  #strong params needed.
+  private 
+  def event_params
+    params.require(:event).permit(:id, :title, date:, :start_time, :end_time, :min_age, max_attendees, :img_url, :location)
   end
 end
