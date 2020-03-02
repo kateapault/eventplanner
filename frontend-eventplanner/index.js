@@ -1,13 +1,15 @@
-url = 'http://localhost:3000/events'
+let baseURL = 'http://localhost:3000'
+let eventsURL = `${baseURL}/events`
 
-document.addEventListener("DOMContentLoaded", (event) => {
-    fetch(url)
+document.addEventListener("DOMContentLoaded", () => {
+    fetch(eventsURL)
     .then(response => { 
-        response.json()
+        // response.json()
+        console.log(response.json())
     })
     .then(eventsJSON => {
-        console.log(eventsJSON)
-        let jsonText = document.createElement("h1")
-        jsonText.innerText = eventsJSON
+
+        let testFetchResponse = document.querySelector("h1")
+        testFetchResponse.innerText = eventsJSON
     })
 })
