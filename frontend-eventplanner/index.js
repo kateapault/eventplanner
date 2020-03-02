@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
     })
     .then(eventsJSON => {
 
-        let testFetchResponse = document.querySelector("h1")
-        testFetchResponse.innerText = eventsJSON
+        // let testFetchResponse = document.querySelector("h1")
+        // testFetchResponse.innerText = eventsJSON
     })
 })
