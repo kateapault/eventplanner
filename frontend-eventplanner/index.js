@@ -6,22 +6,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let events = fetch(eventsURL)
     .then(response => response.json())  
-    .then(eventsJSON);
-
-    function eventsJSON(resp) {
-        console.log("we are receiving response");
-        console.log(resp);
-        showEvents(resp)
-    }
+    .then(showEvents);
 
 })
     
-
-
-function showEvents(eventsJSON){
+function showEvents(eJSON){
     let showEventsDiv = document.querySelector('#show-events')
     showEventsDiv.style.display = "block"
-    eventsJSON.forEach(event => {
+    eJSON.forEach(event => {
         showEventsDiv.appendChild(eventDisplay(event))
     });
 }
@@ -29,9 +21,15 @@ function showEvents(eventsJSON){
 ///////////////////////////////////////
 ///////////////////////////////////////
 
-function eventDisplay(eventJSON){
+function eventDisplay(eJSON){
     let eventElement = document.createElement('div')
-    eventElement.setAttribute('data-user-id',eventJSON["user_id"])
+
+    debugger
+
+    eventElement.setAttribute('data-user-id', eJSON["user_id"])
+
+    // eventElement.dataset.userId = eventJSON["user_id"] is equivalent. 
+    
     eventElement.className = "event-list"
     
     if (!!eventJSON["img_url"]) {
@@ -55,8 +53,8 @@ function eventDisplay(eventJSON){
     eventElement.appendChild(eventDateAndTime)
 
     if (!!eventJSON["min_age"]){
-        let eventMaxAttendees = document.createElement('p')
-        eventMaxAttendees.innerText = `Minimum Age: ${eventJSON["min_age"]}`
+        let eventMaxAge = document.createElement('p')
+        eventMaxAge.innerText = `Minimum Age: ${eventJSON["min_age"]}`
         eventElement.appendChild(eventMaxAttendees)
     }
 
