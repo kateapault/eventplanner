@@ -5,15 +5,16 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("We are loaded now")
     // turnOffDivsExcept('show-events')
     // document.querySelector('#create-event').style.display = "none"
-    let events = fetch(eventsURL)
-    .then(response => response.json())  
-    .then(eventsJSON);
+    fetchAllEvents()
+    // let events = fetch(eventsURL)
+    // .then(response => response.json())  
+    // .then(eventsJSON);
 
-    function eventsJSON(resp) {
-        console.log("we are receiving response");
-        console.log(resp);
-        showEvents(resp)
-    }
+    // function eventsJSON(resp) {
+    //     console.log("we are receiving response");
+    //     console.log(resp);
+    //     showEvents(resp)
+    // }
 
     document.querySelector("#nav").addEventListener("click",(event) => {
         if (event.target.className === "nav") {
@@ -30,14 +31,14 @@ function showEvents(eventsJSON){
     let showEventsDiv = document.querySelector('#show-events')
     showEventsDiv.style.display = "block"
     eventsJSON.forEach(event => {
-        showEventsDiv.appendChild(eventDisplay(event))
+        showEventsDiv.appendChild(eventDisplayInList(event))
     });
 }
 
 ///////////////////////////////////////
 ///////////////////////////////////////
 
-function eventDisplay(eventJSON){
+function eventDisplayInList(eventJSON){
     let eventElement = document.createElement('div')
     eventElement.setAttribute('data-user-id',eventJSON["user_id"])
     eventElement.className = "event-list"
@@ -56,11 +57,6 @@ function eventDisplay(eventJSON){
     eventLocation.innerText = eventJSON.location
     eventElement.appendChild(eventLocation)
 
-    let eventDateAndTime = document.createElement("div")
-    eventDateAndTime.innerText = `${eventJSON.date}`
-    eventDateAndTime.innerText += ` | Start: ${eventJSON["start_time"]}`
-    eventDateAndTime.innerText += ` | End: ${eventJSON["end_time"]}`
-    eventElement.appendChild(eventDateAndTime)
 
     if (eventJSON["min_age"]){
         let eventMaxAttendees = document.createElement('p')
@@ -83,6 +79,16 @@ function eventDisplay(eventJSON){
     return eventElement
 }
 
+function eventDisplaySingle(eventJSON) {
+    let eventElement = document.querySelector("div#single-event")
+
+    let eventDateAndTime = document.createElement("div")
+    eventDateAndTime.innerText = `${eventJSON.date}`
+    eventDateAndTime.innerText += ` | Start: ${eventJSON["start_time"]}`
+    eventDateAndTime.innerText += ` | End: ${eventJSON["end_time"]}`
+    eventElement.appendChild(eventDateAndTime)
+}
+
 
 ////////////////////////////////
 ////////////////////////////////
@@ -102,6 +108,7 @@ function showEventForm() {
 function turnOffDivsExcept(divIdToKeep) {
     let divs = document.querySelectorAll("body>div")
     divs.forEach( div => {
+        // switch div.id
         if (div.id === "nav" || div.id === divIdToKeep) {
             div.style.display = "block"
         } else {
