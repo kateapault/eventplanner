@@ -7,16 +7,17 @@
     </head>
     <body>
         <div id="nav">
-            <button class="nav">All Events</button>
-            <button class="nav">My Tickets</button>
-            <button class="nav">Create Event</button>
-            <button class="nav">My Created Events</button>
+            <button class="nav" data-points-to="show-events">All Events</button>
+            <button class="nav" data-points-to="user-tickets">My Tickets</button>
+            <button class="nav" data-points-to="create-event">Create Event</button>
+            <button class="nav" data-points-to="user-created-events">My Created Events</button>
         </div>
 
         <div id="show-events">
             <h1>All Events</h1>
         </div>
         <div id="create-event">
+            <h2>Create New Event:</h2>
             <form>
                 <label for="title">Event Title: </label>
                 <input id="title" type="text" placeholder="My Awesome Event">
@@ -33,6 +34,12 @@ max_attendees = [30, 450, 60]
 img_url = [nil, nil, nil]
 location = ['Manhattan','Newark','Brooklyn'] -->
             </form>
+        </div>
+        <div id="user-tickets">
+            my tickets go here
+        </div>
+        <div id="user-created-events">
+
         </div>
         <script src="index.js"></script>
     </body>

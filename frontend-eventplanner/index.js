@@ -3,6 +3,7 @@ let eventsURL = `${baseURL}/events`
  
 document.addEventListener("DOMContentLoaded", () => {
     console.log("We are loaded now")
+    // turnOffDivsExcept('show-events')
     // document.querySelector('#create-event').style.display = "none"
     let events = fetch(eventsURL)
     .then(response => response.json())  
@@ -14,7 +15,11 @@ document.addEventListener("DOMContentLoaded", () => {
         showEvents(resp)
     }
 
-
+    document.querySelector("#nav").addEventListener("click",(event) => {
+        if (event.target.className === "nav") {
+            turnOffDivsExcept(event.target.pointsTo)
+        }
+    })
 
 })
     
@@ -65,7 +70,7 @@ function eventDisplay(eventJSON){
 
     if (eventJSON["max_attendees"]){
         let eventMaxAttendees = document.createElement('p')
-        eventMaxAttendees.innerText = `Total Tickets: ${eventJSON["max_attendees"]}`
+        eventMaxAttendees.innerText = `Tickets Left: ${eventJSON["max_attendees"]}`
         console.log("this value is not null!")
         eventElement.appendChild(eventMaxAttendees)
     }
@@ -104,3 +109,4 @@ function turnOffDivsExcept(divIdToKeep) {
         }
     })
 }
+
