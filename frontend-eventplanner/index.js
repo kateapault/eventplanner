@@ -22,6 +22,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     })
 
+    document.querySelector("form").addEventListener("submit",(event) => {
+        event.preventDefault()
+        fetchCreateNewEvent("1")
+        document.querySelector("form").reset()
+    })
+
 })
     
 ///////////////////////////////////////
@@ -59,9 +65,9 @@ function eventDisplayInList(eventJSON){
 
 
     if (eventJSON["min_age"]){
-        let eventMaxAttendees = document.createElement('p')
-        eventMaxAttendees.innerText = `Minimum Age: ${eventJSON["min_age"]}`
-        eventElement.appendChild(eventMaxAttendees)
+        let eventMinAge = document.createElement('p')
+        eventMinAge.innerText = `Minimum Age: ${eventJSON["min_age"]}`
+        eventElement.appendChild(eventMinAge)
     }
 
     if (eventJSON["max_attendees"]){
@@ -117,3 +123,22 @@ function turnOffDivsExcept(divIdToKeep) {
     })
 }
 
+function getDataFromCreateEventForm() {
+    // make empty data hash
+    let newEventData = {
+        title: null,
+        location: null,
+        date: null,
+        start_time: null,
+        end_time: null,
+        min_age: null,
+        max_attendees: null,
+        img_url: null
+    }
+    
+    for (let [key,value] of Object.entries(newEventData)) {
+        newEventData[`${key}`] = document.querySelector(`#${key}`).value
+    }
+
+    return newEventData
+}

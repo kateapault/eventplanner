@@ -37,14 +37,40 @@ function fetchUsersTickets(userID) {
     .then(eventJSON);
     function eventJSON(resp){
         console.log(resp)
-        
+        // show concerts 
+        // if (ticket.user_id === userID) {
+        //     console.log(ticket)
+        // }
     }
 }
 
 function fetchUsersCreatedEvents(userID) {
     // GET      | returns array of event JSONs
+    fetch(EVENTSURL)
+    .then(response => response.json())
+    .then(filterEventsByUserId)
+    function filterEventsByUserId(resp,userID) {
+
+    }
 }
 
-function fetchCreateNewEvent(userID) {
+function fetchCreateNewEvent(userID) {          // This does not reload DOM but is posting correctly
     // POST     |
+    let data = getDataFromCreateEventForm()
+    data['user_id'] = userID
+    console.log(data)
+    // data['tickets'] = []
+
+    fetch(EVENTSURL, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(resp => {
+        console.log(`post successful:`)
+        console.log(resp)
+    })
+
 }
