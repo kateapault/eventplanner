@@ -2,6 +2,11 @@ class TicketsController < ApplicationController
    def new
    end
 
+   def index
+    @tickets = Ticket.all
+    render json: @tickets
+   end
+
    def create
     @ticket = Ticket.new(ticket_params);
     

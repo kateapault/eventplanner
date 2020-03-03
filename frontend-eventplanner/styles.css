@@ -1,0 +1,20 @@
+#nav {
+    background-color: darkgreen;
+}
+
+.nav {
+    background-color: darkgreen;
+    border: none;
+    color: white;
+    padding: 2vh 2ch;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+.nav:hover {
+    background-color:  #4CAF50; /* Green */
+    color: darkgreen;
+}
+

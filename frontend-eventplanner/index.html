@@ -4,18 +4,49 @@
         <meta charset="utf-8">
         <title>Events Planner</title>
         <link rel="stylesheet" type = "text/css" href="styles.css">
+        <script src="index.js"></script>
+        <script src="fetches.js"></script>
     </head>
     <body>
         <header>
-            <h1>Events Planner</h1>
+        <div id="nav">
+            <button class="nav" data-points-to="show-events">All Events</button>
+            <button class="nav" data-points-to="user-tickets">My Tickets</button>
+            <button class="nav" data-points-to="create-event">Create Event</button>
+            <button class="nav" data-points-to="user-created-events">My Created Events</button>
+        </div>
         </header>
-
+        
         <div id="show-events">
-            
+            <h1>All Events</h1>
+        </div>
+        <div id="single-event">
+            single event page
         </div>
         <div id="create-event">
+            <h2>Create New Event:</h2>
+            <form>
+                <label for="title">Event Title: </label>
+                <input id="title" type="text" placeholder="My Awesome Event">
+                <label for="location">Location: </label>
+                <input id="location" type="text" placeholder="New York City">
+                <label for="date">Date: </label>
+                <input id="date" type="date">
+                <input type="submit">
 
+<!-- start_time = ['4:30 PM','6:45 PM','10:00 PM']
+end_time = ['7:30 PM', '10:15 PM', '1:00 AM']
+min_age = [nil, 16, 21]
+max_attendees = [30, 450, 60]
+img_url = [nil, nil, nil]
+location = ['Manhattan','Newark','Brooklyn'] -->
+            </form>
         </div>
-        <script src="index.js"></script>
+        <div id="user-tickets">
+            my tickets go here
+        </div>
+        <div id="user-created-events">
+            events I created go here
+        </div>
     </body>
 </html>
