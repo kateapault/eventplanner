@@ -7,62 +7,64 @@ document.addEventListener("DOMContentLoaded", () => {
 
     console.log("no loggedInID yet!")
     document.querySelector('#logout').style.display = "none"
-    let loginSignup = document.querySelector("div#login-signup")
-    loginSignup.style.height = "100vh"
-    loginSignup.style.width = "100vw"
+    generateSignupForm()
 
-    document.querySelector("#login-form").addEventListener("submit",(event) => {
-        event.preventDefault()
-        fetchLogin()
-    })
+    // let loginSignup = document.querySelector("div#login-signup")
+    // loginSignup.style.height = "100vh"
+    // loginSignup.style.width = "100vw"
+
+    // document.querySelector("#login-form").addEventListener("submit",(event) => {
+    //     event.preventDefault()
+    //     fetchLogin()
+    // })
     
-    document.querySelector("#signup-form").addEventListener("submit",(event) => {
-        event.preventDefault()
-        let signupData = getDataFromSignupForm()
-        fetchSignup(signupData)
+    // document.querySelector("#signup-form").addEventListener("submit",(event) => {
+    //     event.preventDefault()
+    //     let signupData = getDataFromSignupForm()
+    //     fetchSignup(signupData)
 
-    })
+    // })
 
-    document.querySelector("#event-form").addEventListener("submit",(event) => {
-        event.preventDefault()
-        fetchCreateNewEvent(loggedInID)
-        document.querySelector("#event-form").reset()
-    })
+    // document.querySelector("#event-form").addEventListener("submit",(event) => {
+    //     event.preventDefault()
+    //     fetchCreateNewEvent(loggedInID)
+    //     document.querySelector("#event-form").reset()
+    // })
 
-    let eventsList = document.querySelector("#show-events")
-    eventsList.addEventListener("click", (event) => {
-        let clickedElement = event.target
-        if (clickedElement.className === "buy-ticket") {
-            let eventID = clickedElement.getAttribute("event-id")
-            fetchBuyTicket(eventID,"1") // fake user ID
-            let ticketsLeft = clickedElement.previousSibling.lastChild
-            ticketsLeft.innerText = ticketsLeft.innerText - 1
-        }
-    })
+    // let eventsList = document.querySelector("#show-events")
+    // eventsList.addEventListener("click", (event) => {
+    //     let clickedElement = event.target
+    //     if (clickedElement.className === "buy-ticket") {
+    //         let eventID = clickedElement.getAttribute("event-id")
+    //         fetchBuyTicket(eventID,"1") // fake user ID
+    //         let ticketsLeft = clickedElement.previousSibling.lastChild
+    //         ticketsLeft.innerText = ticketsLeft.innerText - 1
+    //     }
+    // })
 
-    let logoutButton = document.querySelector('#logout')
-    logoutButton.addEventListener("click", () => {
-        location = location
-    })
+    // let logoutButton = document.querySelector('#logout')
+    // logoutButton.addEventListener("click", () => {
+    //     location = location
+    // })
 
-    document.querySelector("#nav").addEventListener("click", (event) => {
-        let clickedElement = event.target
+    // document.querySelector("#nav").addEventListener("click", (event) => {
+    //     let clickedElement = event.target
 
-        let viewDiv = document.create
-        switch (clickedElement.id) {
-            case "show-events":
+    //     let viewDiv = document.create
+    //     switch (clickedElement.id) {
+    //         case "show-events":
                 
-            case "create-event":
+    //         case "create-event":
 
-            case "user-tickets":
+    //         case "user-tickets":
 
-            case "user-created-events":
+    //         case "user-created-events":
 
-            case "logout":
-                
-        }
+    //         case "logout":
 
-    })
+    //     }
+
+    // })
 
 }) ////////// DOMContentLoaded ///////////////
     
@@ -226,4 +228,53 @@ function allEvents() {
 function createEvent() {
     // fetchCr
     eateNewEvent(loggedInID)
+}
+
+
+
+
+
+
+function generateSignupForm() {
+    let viewDiv = document.querySelector("div#main-view")
+
+    let signupForm = document.createElement('form')
+    newInput('text','username','username','Username: ',signupForm)
+    newInput('text','name','Firstname Lastname','Name: ',signupForm)
+    newInput('number','age','18','Age: ',signupForm)
+    newInput('text','email','me@example.com','Email: ',signupForm)
+    newInput('number','phone_number','5556667788','Phone: ',signupForm)
+
+    let submitButton = document.createElement('button')
+    submitButton.id = 'signup-submit'
+    submitButton.innerText = 'Sign Up'
+    signupForm.appendChild(submitButton)
+
+    viewDiv.appendChild(signupForm)
+}
+
+function generateLoginForm() {
+    let viewDiv = document.querySelector("div#main-view")
+    
+    let loginForm = document.createElement('form')
+    newInput('text','username','username','Username: ',loginForm)
+
+    let submitButton = document.createElement('button')
+    submitButton.id = 'signup-submit'
+    submitButton.innerText = 'Sign Up'
+    loginForm.appendChild(submitButton)
+
+    viewDiv.appendChild(loginForm)
+}
+
+function newInput(inputType,inputId,placeholderText,labelText,parentForm) {
+    let label = document.createElement('label')
+    label.setAttribute('for',inputId)
+    label.innerText = labelText
+    let input = document.createElement('input')
+    input.setAttribute('type',inputType)
+    input.id = inputId
+    input.setAttribute('placeholder',placeholderText)
+    parentForm.appendChild(label)
+    parentForm.appendChild(input)
 }
