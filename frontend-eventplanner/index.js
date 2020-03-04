@@ -36,49 +36,49 @@ function eventDisplay(eJSON){
     
     eventElement.className = "event-list"
     
-    if (eventJSON["img_url"]) {
+    if (eJSON["img_url"]) {
         let eventImage = document.createElement('img')
-        eventImage.setAttribute('src',eventJSON["img_url"])
+        eventImage.setAttribute('src',eJSON["img_url"])
         eventElement.appendChild(eventImage)
     }
 
     let eventTitle = document.createElement('h2')
-    eventTitle.innerText = eventJSON.title
+    eventTitle.innerText = eJSON.title
     eventElement.appendChild(eventTitle)
 
     let eventLocation = document.createElement("p")
-    eventLocation.innerText = eventJSON.location
+    eventLocation.innerText = eJSON.location
     eventElement.appendChild(eventLocation)
 
 
-    if (!!eventJSON["min_age"]){
+    if (!!eJSON["min_age"]){
         let eventMaxAge = document.createElement('p')
-        eventMaxAge.innerText = `Minimum Age: ${eventJSON["min_age"]}`
-        eventElement.appendChild(eventMaxAttendees)
+        eventMaxAge.innerText = `Minimum Age: ${eJSON["min_age"]}`
+        eventElement.appendChild(eventMaxAge)
     }
 
-    if (eventJSON["max_attendees"]){
+    if (eJSON["max_attendees"]){
         let eventMaxAttendees = document.createElement('p')
-        eventMaxAttendees.innerText = `Tickets Left: ${eventJSON["max_attendees"]}`
-        console.log("this value is not null!")
+        eventMaxAttendees.innerText = `Tickets Left: ${eJSON["max_attendees"]}`
+        // console.log("this value is not null!")
         eventElement.appendChild(eventMaxAttendees)
     }
     
     let buyTicketButton = document.createElement("button")
-    buyTicketButton.setAttribute('data-event-id',eventJSON.id)
+    buyTicketButton.setAttribute('data-event-id',eJSON.id)
     buyTicketButton.innerText = "Buy Ticket"
     eventElement.appendChild(buyTicketButton)
 
     return eventElement
 }
 
-function eventDisplaySingle(eventJSON) {
+function eventDisplaySingle(eJSON) {
     let eventElement = document.querySelector("div#single-event")
 
     let eventDateAndTime = document.createElement("div")
-    eventDateAndTime.innerText = `${eventJSON.date}`
-    eventDateAndTime.innerText += ` | Start: ${eventJSON["start_time"]}`
-    eventDateAndTime.innerText += ` | End: ${eventJSON["end_time"]}`
+    eventDateAndTime.innerText = `${eJSON.date}`
+    eventDateAndTime.innerText += ` | Start: ${eJSON["start_time"]}`
+    eventDateAndTime.innerText += ` | End: ${eJSON["end_time"]}`
     eventElement.appendChild(eventDateAndTime)
 }
 
