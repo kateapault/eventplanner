@@ -10,44 +10,48 @@ document.addEventListener("DOMContentLoaded", () => {
     .then(response => response.json())  
     .then(showEvents);
 
-    document.querySelector("form").addEventListener("submit",(event) => {
-        event.preventDefault()
-        fetchCreateNewEvent("1")
-        document.querySelector("form").reset()
-    })
+    // document.querySelector("form").addEventListener("submit",(event) => {
+    //     event.preventDefault()
+    //     fetchCreateNewEvent("1")
+    //     document.querySelector("form").reset()
+    // })
 
-    let eventsList = document.querySelector("#show-events")
-    eventsList.addEventListener("click", (event) => {
-        let clickedElement = event.target
-        if (clickedElement.className === "buy-ticket") {
-            let eventID = clickedElement.getAttribute("event-id")
-            fetchBuyTicket(eventID,"1") // fake user ID
-            let ticketsLeft = clickedElement.previousSibling.lastChild
-            ticketsLeft.innerText = ticketsLeft.innerText - 1
-        }
-    })
+    // let eventsList = document.querySelector("#show-events")
+    // eventsList.addEventListener("click", (event) => {
+    //     let clickedElement = event.target
+    //     if (clickedElement.className === "buy-ticket") {
+    //         let eventID = clickedElement.getAttribute("event-id")
+    //         fetchBuyTicket(eventID,"1") // fake user ID
+    //         let ticketsLeft = clickedElement.previousSibling.lastChild
+    //         ticketsLeft.innerText = ticketsLeft.innerText - 1
+    //     }
+    // })
 
 })
     
 function showEvents(eJSON){
-    let showEventsDiv = document.querySelector('#show-events')
-    showEventsDiv.style.display = "block"
+    let cardsDiv = document.querySelector('.cards')
+    // showEventsDiv.style.display = "block"
     eJSON.forEach(event => {
-        showEventsDiv.appendChild(eventDisplay(event))
+        cardsDiv.appendChild(eventDisplay(event))
     });
 }
 
 ///////////////////////////////////////
 ///////////////////////////////////////
 
-function eventDisplay(eventJSON){
-    let eventElement = document.createElement('div')
+function eventDisplay(eJSON){
+    let eventWrapper = document.createElement('div');
+    eventWrapper.className = "wrapper"
 
-    eventElement.setAttribute('data-user-id', eventJSON["user_id"])
+    let eventElement = document.createElement('div');
+    eventWrapper.appendChild(eventElement)
 
-    // eventElement.dataset.userId = eventJSON["user_id"] is equivalent. 
+    eventElement.setAttribute('data-user-id', eJSON["user_id"])
+
+    // eventElement.dataset.userId = eJSON["user_id"] is equivalent. 
     
-    eventElement.className = "event-list"
+    eventElement.className = "card"
     
     if (eJSON["img_url"]) {
         let eventImage = document.createElement('img')
@@ -82,7 +86,7 @@ function eventDisplay(eventJSON){
     buyTicketButton.innerText = "Buy Ticket"
     eventElement.appendChild(buyTicketButton)
 
-    return eventElement
+    return eventWrapper
 }
 
 function eventDisplaySingle(eJSON) {
@@ -111,17 +115,17 @@ function showEventForm() {
     document.querySelector('#date').setAttribute('max',`${yyyy}-${mm}-${dd}`)
 }
 
-function turnOffDivsExcept(divIdToKeep) {
-    let divs = document.querySelectorAll("body>div")
-    divs.forEach( div => {
-        // switch div.id
-        if (div.id === "nav" || div.id === divIdToKeep) {
-            div.style.display = "block"
-        } else {
-            div.style.display = "none"
-        }
-    })
-}
+// function turnOffDivsExcept(divIdToKeep) {
+//     let divs = document.querySelectorAll("body>div")
+//     divs.forEach( div => {
+//         // switch div.id
+//         if (div.id === "nav" || div.id === divIdToKeep) {
+//             div.style.display = "block"
+//         } else {
+//             div.style.display = "none"
+//         }
+//     })
+// }
 
 function getDataFromCreateEventForm() {
     // make empty data hash
