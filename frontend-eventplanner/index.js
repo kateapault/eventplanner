@@ -23,12 +23,21 @@ document.addEventListener("DOMContentLoaded", () => {
     //     let signupData = getDataFromSignupForm()
     //     fetchSignup(signupData)
 
+    // document.querySelector("form").addEventListener("submit",(event) => {
+    //     event.preventDefault()
+    //     fetchCreateNewEvent("1")
+    //     document.querySelector("form").reset()
     // })
 
-    // document.querySelector("#event-form").addEventListener("submit",(event) => {
-    //     event.preventDefault()
-    //     fetchCreateNewEvent(loggedInID)
-    //     document.querySelector("#event-form").reset()
+    // let eventsList = document.querySelector("#show-events")
+    // eventsList.addEventListener("click", (event) => {
+    //     let clickedElement = event.target
+    //     if (clickedElement.className === "buy-ticket") {
+    //         let eventID = clickedElement.getAttribute("event-id")
+    //         fetchBuyTicket(eventID,"1") // fake user ID
+    //         let ticketsLeft = clickedElement.previousSibling.lastChild
+    //         ticketsLeft.innerText = ticketsLeft.innerText - 1
+    //     }
     // })
 
     // let eventsList = document.querySelector("#show-events")
@@ -68,49 +77,53 @@ document.addEventListener("DOMContentLoaded", () => {
 
 }) ////////// DOMContentLoaded ///////////////
     
-function showEvents(eventsJSON){
-    let showEventsDiv = document.querySelector('#show-events')
-    showEventsDiv.style.display = "block"
-    eventsJSON.forEach(event => {
-        showEventsDiv.appendChild(eventDisplay(event))
+function showEvents(eJSON){
+    let cardsDiv = document.querySelector('.cards')
+    eJSON.forEach(event => {
+        cardsDiv.appendChild(eventDisplay(event))
     });
 }
 
 ///////////////////////////////////////
 ///////////////////////////////////////
 
-function eventDisplay(eventJSON){
-    let eventElement = document.createElement('div')
-    eventElement.setAttribute('data-user-id', eventJSON["user_id"])
+function eventDisplay(eJSON){
+    let eventWrapper = document.createElement('div');
+    eventWrapper.className = "wrapper"
 
-    // eventElement.dataset.userId = eventJSON["user_id"] is equivalent. 
+    let eventElement = document.createElement('div');
+    eventWrapper.appendChild(eventElement)
 
-    eventElement.className = "event-list"
+    eventElement.setAttribute('data-user-id', eJSON["user_id"])
+
+    // eventElement.dataset.userId = eJSON["user_id"] is equivalent. 
     
-    if (eventJSON["img_url"]) {
+    eventElement.className = "card"
+    
+    if (eJSON["img_url"]) {
         let eventImage = document.createElement('img')
-        eventImage.setAttribute('src',eventJSON["img_url"])
+        eventImage.setAttribute('src',eJSON["img_url"])
         eventElement.appendChild(eventImage)
     }
 
     let eventTitle = document.createElement('h2')
-    eventTitle.innerText = eventJSON.title
+    eventTitle.innerText = eJSON.title
     eventElement.appendChild(eventTitle)
 
     let eventLocation = document.createElement("p")
-    eventLocation.innerText = eventJSON.location
+    eventLocation.innerText = eJSON.location
     eventElement.appendChild(eventLocation)
 
 
-    if (!!eventJSON["min_age"]){
+    if (!!eJSON["min_age"]){
         let eventMaxAge = document.createElement('p')
-        eventMaxAge.innerText = `Minimum Age: ${eventJSON["min_age"]}`
+        eventMaxAge.innerText = `Minimum Age: ${eJSON["min_age"]}`
         eventElement.appendChild(eventMaxAge)
     }
 
-    if (eventJSON["max_attendees"]){
+    if (eJSON["max_attendees"]){
         let eventMaxAttendees = document.createElement('p')
-        eventMaxAttendees.innerHTML = `Tickets Left: <span class="tickets-left">${eventJSON["max_attendees"]-eventJSON.tickets.length}</span>`
+        eventMaxAttendees.innerHTML = `Tickets Left: <span class="tickets-left">${eJSON["max_attendees"]-eJSON.tickets.length}</span>`
         eventElement.appendChild(eventMaxAttendees)
     }
     
@@ -122,16 +135,16 @@ function eventDisplay(eventJSON){
         eventElement.appendChild(buyTicketButton)
     }
 
-    return eventElement
+    return eventWrapper
 }
 
-function eventDisplaySingle(eventJSON) {
+function eventDisplaySingle(eJSON) {
     let eventElement = document.querySelector("div#single-event")
 
     let eventDateAndTime = document.createElement("div")
-    eventDateAndTime.innerText = `${eventJSON.date}`
-    eventDateAndTime.innerText += ` | Start: ${eventJSON["start_time"]}`
-    eventDateAndTime.innerText += ` | End: ${eventJSON["end_time"]}`
+    eventDateAndTime.innerText = `${eJSON.date}`
+    eventDateAndTime.innerText += ` | Start: ${eJSON["start_time"]}`
+    eventDateAndTime.innerText += ` | End: ${eJSON["end_time"]}`
     eventElement.appendChild(eventDateAndTime)
 }
 
@@ -151,17 +164,17 @@ function showEventForm() {
     document.querySelector('#date').setAttribute('max',`${yyyy}-${mm}-${dd}`)
 }
 
-function turnOffDivsExcept(divIdToKeep) {
-    let divs = document.querySelectorAll("body>div")
-    divs.forEach( div => {
-        // switch div.id
-        if (div.id === "nav" || div.id === divIdToKeep) {
-            div.style.display = "block"
-        } else {
-            div.style.display = "none"
-        }
-    })
-}
+// function turnOffDivsExcept(divIdToKeep) {
+//     let divs = document.querySelectorAll("body>div")
+//     divs.forEach( div => {
+//         // switch div.id
+//         if (div.id === "nav" || div.id === divIdToKeep) {
+//             div.style.display = "block"
+//         } else {
+//             div.style.display = "none"
+//         }
+//     })
+// }
 
 function getDataFromCreateEventForm() {
     // make empty data hash
