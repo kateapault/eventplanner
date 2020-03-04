@@ -89,3 +89,24 @@ function fetchCreateNewEvent(userID) {          // This does not reload DOM but 
     })
 
 }
+
+function fetchLogin(loginUsername) {
+    // GET      | returns userID to then set
+    fetch(USERSURL)
+    .then(response => response.json())
+    .then(response => findUserInList(response))
+    function findUserInList(response) {
+        let userID = response.forEach(user => {
+            console.log(user)
+            if (user.username == loginUsername) {
+                loggedInID = user.id
+                console.log(`loggedInID set to ${loggedInID}`)
+            }
+        })
+    }
+}
+
+function fetchSignup(userData) {
+    // POST     | adds user to db, returns newly created userID
+    
+}

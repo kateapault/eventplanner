@@ -1,19 +1,38 @@
 let baseURL = 'http://localhost:3000'
 let eventsURL = `${baseURL}/events`
+let loggedInID
  
 document.addEventListener("DOMContentLoaded", () => {
     console.log("We are loaded now")
 
+    document.querySelector('#logout').style.display = "none"
+    let loginSignup = document.querySelector("div#login-signup")
+    loginSignup.style.height = "100vh"
+    loginSignup.style.width = "100vw"
+
+    document.querySelector("#login-signup").addEventListener("submit",(event) => {
+        event.preventDefault()
+        let clickedElement = event.target
+        if (clickedElement.id === "login") {
+            let loginUsername = document.querySelector('input#login-username').value
+            fetchLogin(loginUsername)
+        } else if (clickedElement.id === "signup") {
+            let signupData = getDataFromSignupForm()
+            fetchSignup(signupData)
+        }
+        document.querySelector('#login-signup').style.display = "none"
+        document.querySelector('#logout').style.display = "inline"
+    })
+
+    // let events = fetch(eventsURL)
+    // .then(response => response.json())  
+    // .then(showEvents);
     fetchAllEvents()
 
-    let events = fetch(eventsURL)
-    .then(response => response.json())  
-    .then(showEvents);
-
-    document.querySelector("form").addEventListener("submit",(event) => {
+    document.querySelector("#event-form").addEventListener("submit",(event) => {
         event.preventDefault()
         fetchCreateNewEvent("1")
-        document.querySelector("form").reset()
+        document.querySelector("#event-form").reset()
     })
 
     let eventsList = document.querySelector("#show-events")
@@ -25,6 +44,11 @@ document.addEventListener("DOMContentLoaded", () => {
             let ticketsLeft = clickedElement.previousSibling.lastChild
             ticketsLeft.innerText = ticketsLeft.innerText - 1
         }
+    })
+
+    let logoutButton = document.querySelector('#logout')
+    logoutButton.addEventListener("click", () => {
+        location = location
     })
 
 })
@@ -42,11 +66,10 @@ function showEvents(eJSON){
 
 function eventDisplay(eventJSON){
     let eventElement = document.createElement('div')
-
     eventElement.setAttribute('data-user-id', eventJSON["user_id"])
 
     // eventElement.dataset.userId = eventJSON["user_id"] is equivalent. 
-    
+
     eventElement.className = "event-list"
     
     if (eventJSON["img_url"]) {
@@ -141,4 +164,20 @@ function getDataFromCreateEventForm() {
     }
 
     return newEventData
+}
+
+function getDataFromSignupForm() {
+    let newUserData = {
+        username: null,
+        name: null,
+        age: null,
+        email: null,
+        phone: null
+    }
+
+    for (let [key,value] of Object.entries(newUserData)) {
+        newUserData[`${key}`] = document.querySelector(`#${key}`).value
+    }
+
+    return newUserData
 }
