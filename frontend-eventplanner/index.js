@@ -20,14 +20,12 @@ document.addEventListener("DOMContentLoaded", () => {
         event.preventDefault()
         let signupData = getDataFromSignupForm()
         fetchSignup(signupData)
-        document.querySelector('#login-signup').style.display = "none"
-        document.querySelector('#logout').style.display = "inline"
-        fetchAllEvents()
+
     })
 
     document.querySelector("#event-form").addEventListener("submit",(event) => {
         event.preventDefault()
-        fetchCreateNewEvent("1")
+        fetchCreateNewEvent(loggedInID)
         document.querySelector("#event-form").reset()
     })
 
@@ -47,7 +45,26 @@ document.addEventListener("DOMContentLoaded", () => {
         location = location
     })
 
-})
+    document.querySelector("#nav").addEventListener("click", (event) => {
+        let clickedElement = event.target
+
+        let viewDiv = document.create
+        switch (clickedElement.id) {
+            case "show-events":
+                
+            case "create-event":
+
+            case "user-tickets":
+
+            case "user-created-events":
+
+            case "logout":
+                
+        }
+
+    })
+
+}) ////////// DOMContentLoaded ///////////////
     
 function showEvents(eventsJSON){
     let showEventsDiv = document.querySelector('#show-events')
@@ -95,11 +112,13 @@ function eventDisplay(eventJSON){
         eventElement.appendChild(eventMaxAttendees)
     }
     
-    let buyTicketButton = document.createElement("button")
-    buyTicketButton.className = "buy-ticket"
-    buyTicketButton.setAttribute('event-id',eventJSON.id)
-    buyTicketButton.innerText = "Buy Ticket"
-    eventElement.appendChild(buyTicketButton)
+    if (eventJSON.user_id != loggedInID) {
+        let buyTicketButton = document.createElement("button")
+        buyTicketButton.className = "buy-ticket"
+        buyTicketButton.setAttribute('event-id',eventJSON.id)
+        buyTicketButton.innerText = "Buy Ticket"
+        eventElement.appendChild(buyTicketButton)
+    }
 
     return eventElement
 }
@@ -176,4 +195,35 @@ function getDataFromSignupForm() {
     }
 
     return newUserData
+}
+
+function showUsersCreatedEvents() {
+    let userCreatedEventsDiv = document.querySelector("#user-created-events")
+    let myEvents = fetchUsersCreatedEvents()
+    userCreatedEventsDiv.innerText = showEvents(myEvents)
+}
+
+function showUsersTickets() {
+    let usersTicketsDiv = document.querySelector("#user-tickets")
+    let myTickets = fetchUsersTickets()
+    // myTickets = fetchEventInfoForTickets(myTickets)
+    usersTicketsDiv.innerText = myTickets
+}
+
+function actionsAfterLogin() {
+    document.querySelector('#login-signup').style.display = "none"
+    document.querySelector('#logout').style.display = "inline"
+    fetchAllEvents()
+    showUsersCreatedEvents()
+    showUsersTickets()
+}
+
+
+function allEvents() {
+    fetchAllEvents()
+}
+
+function createEvent() {
+    // fetchCr
+    eateNewEvent(loggedInID)
 }

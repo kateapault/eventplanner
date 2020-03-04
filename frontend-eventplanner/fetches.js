@@ -51,7 +51,7 @@ function fetchUsersTickets(userID) {
     .then(response => response.json())
     .then(eventJSON);
     function eventJSON(resp){
-        console.log(resp)
+        console.log(`resp: ${resp}`)
         // show concerts 
         // if (ticket.user_id === userID) {
         //     console.log(ticket)
@@ -61,12 +61,21 @@ function fetchUsersTickets(userID) {
 
 function fetchUsersCreatedEvents() {
     // GET      | returns array of event JSONs
-    fetch(EVENTSURL)
+    let usersCreatedEvents = []
+    fetch(USERSURL)
     .then(response => response.json())
-    .then(filterEventsByUserId)
-    function filterEventsByUserId(resp) {
-        
-    }
+    .then(resp => {
+        console.log(`loggedInId: ${loggedInID}`)
+        resp.forEach(user => {
+            if (user.id == loggedInID) {
+                console.log("we have a match!")
+                usersCreatedEvents = user.events
+            } else {
+                console.log("no match")
+            }
+        })
+    })
+    return usersCreatedEvents
 }
 
 function fetchCreateNewEvent() {          // This does not reload DOM but is posting correctly
