@@ -59,22 +59,21 @@ function fetchUsersTickets(userID) {
     }
 }
 
-function fetchUsersCreatedEvents(userID) {
+function fetchUsersCreatedEvents() {
     // GET      | returns array of event JSONs
     fetch(EVENTSURL)
     .then(response => response.json())
     .then(filterEventsByUserId)
-    function filterEventsByUserId(resp,userID) {
-
+    function filterEventsByUserId(resp) {
+        
     }
 }
 
-function fetchCreateNewEvent(userID) {          // This does not reload DOM but is posting correctly
+function fetchCreateNewEvent() {          // This does not reload DOM but is posting correctly
     // POST     |
     let data = getDataFromCreateEventForm()
-    data['user_id'] = userID
+    data['user_id'] = loggedInID
     console.log(data)
-    // data['tickets'] = []
 
     fetch(EVENTSURL, {
         method: "POST",
@@ -90,23 +89,56 @@ function fetchCreateNewEvent(userID) {          // This does not reload DOM but 
 
 }
 
-function fetchLogin(loginUsername) {
+function fetchLogin() {
+    console.log("LOGIN METHOD STARTED")
     // GET      | returns userID to then set
+
+    let loginUsername = document.querySelector('#login-username').value
+    console.log(`loginusername: ${loginUsername}`)
+
     fetch(USERSURL)
     .then(response => response.json())
-    .then(response => findUserInList(response))
+    .then(findUserInList)
+    .then(resp => {
+        if (!!loggedInID) {
+            document.querySelector('#login-signup').style.display = "none"
+            document.querySelector('#logout').style.display = "inline"
+            fetchAllEvents()
+            console.log(`OUTSIDE this function and after the fetch, loggedInId = ${loggedInID}`)
+        } else {
+            alert('Incorrect username. Please try again.')
+            location = location
+            console.log(`OUTSIDE this function, the loggedInId did not get saved!`)
+        }
+        console.log(`just for fun: resp : ${resp}`)
+    })
     function findUserInList(response) {
-        let userID = response.forEach(user => {
-            console.log(user)
+        console.log(response)
+        response.forEach(user => {
             if (user.username == loginUsername) {
                 loggedInID = user.id
-                console.log(`loggedInID set to ${loggedInID}`)
+                console.log(`REQUESTED MATCHES ${user.username} YAY`)
+            } else {
+                console.log(`REQUESTED DOES NOT MATCH ${user.username}`)
             }
         })
+        console.log(`inside this function, loggedinid = ${loggedInID}`)
     }
 }
 
 function fetchSignup(userData) {
     // POST     | adds user to db, returns newly created userID
-    
+
+    fetch(USERSURL,{
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData)
+    })
+    .then(response => response.json())
+    .then(newUser => {
+        loggedInID = newUser.id
+        console.log(`loggedInID set to ${loggedInID}`)
+    })
 }

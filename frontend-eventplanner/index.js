@@ -5,29 +5,25 @@ let loggedInID
 document.addEventListener("DOMContentLoaded", () => {
     console.log("We are loaded now")
 
+    console.log("no loggedInID yet!")
     document.querySelector('#logout').style.display = "none"
     let loginSignup = document.querySelector("div#login-signup")
     loginSignup.style.height = "100vh"
     loginSignup.style.width = "100vw"
 
-    document.querySelector("#login-signup").addEventListener("submit",(event) => {
+    document.querySelector("#login-form").addEventListener("submit",(event) => {
         event.preventDefault()
-        let clickedElement = event.target
-        if (clickedElement.id === "login") {
-            let loginUsername = document.querySelector('input#login-username').value
-            fetchLogin(loginUsername)
-        } else if (clickedElement.id === "signup") {
-            let signupData = getDataFromSignupForm()
-            fetchSignup(signupData)
-        }
+        fetchLogin()
+    })
+    
+    document.querySelector("#signup-form").addEventListener("submit",(event) => {
+        event.preventDefault()
+        let signupData = getDataFromSignupForm()
+        fetchSignup(signupData)
         document.querySelector('#login-signup').style.display = "none"
         document.querySelector('#logout').style.display = "inline"
+        fetchAllEvents()
     })
-
-    // let events = fetch(eventsURL)
-    // .then(response => response.json())  
-    // .then(showEvents);
-    fetchAllEvents()
 
     document.querySelector("#event-form").addEventListener("submit",(event) => {
         event.preventDefault()
@@ -53,10 +49,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
 })
     
-function showEvents(eJSON){
+function showEvents(eventsJSON){
     let showEventsDiv = document.querySelector('#show-events')
     showEventsDiv.style.display = "block"
-    eJSON.forEach(event => {
+    eventsJSON.forEach(event => {
         showEventsDiv.appendChild(eventDisplay(event))
     });
 }
@@ -72,49 +68,49 @@ function eventDisplay(eventJSON){
 
     eventElement.className = "event-list"
     
-    if (eJSON["img_url"]) {
+    if (eventJSON["img_url"]) {
         let eventImage = document.createElement('img')
-        eventImage.setAttribute('src',eJSON["img_url"])
+        eventImage.setAttribute('src',eventJSON["img_url"])
         eventElement.appendChild(eventImage)
     }
 
     let eventTitle = document.createElement('h2')
-    eventTitle.innerText = eJSON.title
+    eventTitle.innerText = eventJSON.title
     eventElement.appendChild(eventTitle)
 
     let eventLocation = document.createElement("p")
-    eventLocation.innerText = eJSON.location
+    eventLocation.innerText = eventJSON.location
     eventElement.appendChild(eventLocation)
 
 
-    if (!!eJSON["min_age"]){
+    if (!!eventJSON["min_age"]){
         let eventMaxAge = document.createElement('p')
-        eventMaxAge.innerText = `Minimum Age: ${eJSON["min_age"]}`
+        eventMaxAge.innerText = `Minimum Age: ${eventJSON["min_age"]}`
         eventElement.appendChild(eventMaxAge)
     }
 
-    if (eJSON["max_attendees"]){
+    if (eventJSON["max_attendees"]){
         let eventMaxAttendees = document.createElement('p')
-        eventMaxAttendees.innerHTML = `Tickets Left: <span class="tickets-left">${eJSON["max_attendees"]-eJSON.tickets.length}</span>`
+        eventMaxAttendees.innerHTML = `Tickets Left: <span class="tickets-left">${eventJSON["max_attendees"]-eventJSON.tickets.length}</span>`
         eventElement.appendChild(eventMaxAttendees)
     }
     
     let buyTicketButton = document.createElement("button")
     buyTicketButton.className = "buy-ticket"
-    buyTicketButton.setAttribute('event-id',eJSON.id)
+    buyTicketButton.setAttribute('event-id',eventJSON.id)
     buyTicketButton.innerText = "Buy Ticket"
     eventElement.appendChild(buyTicketButton)
 
     return eventElement
 }
 
-function eventDisplaySingle(eJSON) {
+function eventDisplaySingle(eventJSON) {
     let eventElement = document.querySelector("div#single-event")
 
     let eventDateAndTime = document.createElement("div")
-    eventDateAndTime.innerText = `${eJSON.date}`
-    eventDateAndTime.innerText += ` | Start: ${eJSON["start_time"]}`
-    eventDateAndTime.innerText += ` | End: ${eJSON["end_time"]}`
+    eventDateAndTime.innerText = `${eventJSON.date}`
+    eventDateAndTime.innerText += ` | Start: ${eventJSON["start_time"]}`
+    eventDateAndTime.innerText += ` | End: ${eventJSON["end_time"]}`
     eventElement.appendChild(eventDateAndTime)
 }
 
