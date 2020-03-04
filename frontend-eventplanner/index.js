@@ -22,6 +22,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if (clickedElement.className === "buy-ticket") {
             let eventID = clickedElement.getAttribute("event-id")
             fetchBuyTicket(eventID,"1") // fake user ID
+            let ticketsLeft = clickedElement.previousSibling.lastChild
+            ticketsLeft.innerText = ticketsLeft.innerText - 1
         }
     })
 
@@ -70,7 +72,7 @@ function eventDisplay(eventJSON){
 
     if (eventJSON["max_attendees"]){
         let eventMaxAttendees = document.createElement('p')
-        eventMaxAttendees.innerText = `Tickets Left: ${eventJSON["max_attendees"]}`
+        eventMaxAttendees.innerHTML = `Tickets Left: <span class="tickets-left">${eventJSON["max_attendees"]-eventJSON.tickets.length}</span>`
         eventElement.appendChild(eventMaxAttendees)
     }
     
