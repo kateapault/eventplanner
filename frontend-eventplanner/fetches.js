@@ -94,7 +94,6 @@ function fetchLogin() {
     // GET      | returns userID to then set
 
     let loginUsername = document.querySelector('#login-username').value
-    console.log(`loginusername: ${loginUsername}`)
 
     fetch(USERSURL)
     .then(response => response.json())
@@ -104,25 +103,17 @@ function fetchLogin() {
             document.querySelector('#login-signup').style.display = "none"
             document.querySelector('#logout').style.display = "inline"
             fetchAllEvents()
-            console.log(`OUTSIDE this function and after the fetch, loggedInId = ${loggedInID}`)
         } else {
             alert('Incorrect username. Please try again.')
             location = location
-            console.log(`OUTSIDE this function, the loggedInId did not get saved!`)
         }
-        console.log(`just for fun: resp : ${resp}`)
     })
     function findUserInList(response) {
-        console.log(response)
         response.forEach(user => {
             if (user.username == loginUsername) {
                 loggedInID = user.id
-                console.log(`REQUESTED MATCHES ${user.username} YAY`)
-            } else {
-                console.log(`REQUESTED DOES NOT MATCH ${user.username}`)
             }
         })
-        console.log(`inside this function, loggedinid = ${loggedInID}`)
     }
 }
 
