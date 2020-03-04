@@ -25,12 +25,12 @@ class EventsController < ApplicationController
   def destroy
     @event = Event.find(params[:id])
     @event.destroy
-    render json: ("Event successfully deleted")   # do we want to return the destroyed json for an undo option?
+    render json: ("Event successfully deleted")   
   end
 
   #strong params needed.
   private 
   def event_params
-    params.require(:event).permit(:id, :title, :date, :start_time, :end_time, :min_age, max_attendees, :img_url, :location)
+    params.require(:event).permit(:id, :title, :date, :start_time, :end_time, :min_age, :max_attendees, :img_url, :location, :user_id, tickets: [ :user_id, :event_id ])
   end
 end

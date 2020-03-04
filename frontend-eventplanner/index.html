@@ -27,19 +27,22 @@
             <h2>Create New Event:</h2>
             <form>
                 <label for="title">Event Title: </label>
-                <input id="title" type="text" placeholder="My Awesome Event">
+                <input id="title" type="text" placeholder="My Awesome Event" required>
                 <label for="location">Location: </label>
-                <input id="location" type="text" placeholder="New York City">
+                <input id="location" type="text" placeholder="New York City" required>
                 <label for="date">Date: </label>
-                <input id="date" type="date">
+                <input id="date" type="date" required>
+                <label for="start_time">Start Time: </label>
+                <input type="text" id="start_time">
+                <label for="end_time">End Time: </label>
+                <input type="text" id="end_time">
+                <label for="max_attendees">Total Number of Tickets: </label>
+                <input type="number" id="max_attendees">
+                <label for="min_age">Minimum Age for Event: </label>
+                <input type="number" id="min_age" placeholder="18">
+                <label for="img_url">Image URL: </label>
+                <input type="url" id="img_url">
                 <input type="submit">
-
-<!-- start_time = ['4:30 PM','6:45 PM','10:00 PM']
-end_time = ['7:30 PM', '10:15 PM', '1:00 AM']
-min_age = [nil, 16, 21]
-max_attendees = [30, 450, 60]
-img_url = [nil, nil, nil]
-location = ['Manhattan','Newark','Brooklyn'] -->
             </form>
         </div>
         <div id="user-tickets">

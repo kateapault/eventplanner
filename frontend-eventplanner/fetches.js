@@ -1,7 +1,8 @@
 const BASEURL = 'http://localhost:3000'
 const EVENTSURL = `${BASEURL}/events`
+const USERSURL = `${BASEURL}/users`
 const TICKETSURL = `${BASEURL}/tickets`
-// users?
+// users has 
 
 function fetchAllEvents() {
     // GET      | returns array of event JSONs
@@ -27,24 +28,64 @@ function fetchSingleEvent(eventID) {
 }
 
 function fetchBuyTicket(eventID,userID) {
+    let data = {
+        user_id: userID,
+        event_id: eventID
+    }
+    console.log(`data:`)
+    console.log(data)
     // POST     |
+    fetch(TICKETSURL, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(resp => console.log(resp.json()))
 }
 
 function fetchUsersTickets(userID) {
     // GET      | returns array of ticket JSONs
-    fetch(TICKETSURL)
+    fetch(USERSURL)
     .then(response => response.json())
     .then(eventJSON);
     function eventJSON(resp){
         console.log(resp)
-        
+        // show concerts 
+        // if (ticket.user_id === userID) {
+        //     console.log(ticket)
+        // }
     }
 }
 
 function fetchUsersCreatedEvents(userID) {
     // GET      | returns array of event JSONs
+    fetch(EVENTSURL)
+    .then(response => response.json())
+    .then(filterEventsByUserId)
+    function filterEventsByUserId(resp,userID) {
+
+    }
 }
 
-function fetchCreateNewEvent(userID) {
+function fetchCreateNewEvent(userID) {          // This does not reload DOM but is posting correctly
     // POST     |
+    let data = getDataFromCreateEventForm()
+    data['user_id'] = userID
+    console.log(data)
+    // data['tickets'] = []
+
+    fetch(EVENTSURL, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(resp => {
+        console.log(`post successful:`)
+        console.log(resp)
+    })
+
 }

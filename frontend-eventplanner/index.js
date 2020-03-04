@@ -3,16 +3,29 @@ let eventsURL = `${baseURL}/events`
  
 document.addEventListener("DOMContentLoaded", () => {
     console.log("We are loaded now")
-    // turnOffDivsExcept('show-events')
-    // document.querySelector('#create-event').style.display = "none"
+
     fetchAllEvents()
-    // let events = fetch(eventsURL)
-    // .then(response => response.json())  
-    // .then(eventsJSON);
 
     let events = fetch(eventsURL)
     .then(response => response.json())  
     .then(showEvents);
+
+    document.querySelector("form").addEventListener("submit",(event) => {
+        event.preventDefault()
+        fetchCreateNewEvent("1")
+        document.querySelector("form").reset()
+    })
+
+    let eventsList = document.querySelector("#show-events")
+    eventsList.addEventListener("click", (event) => {
+        let clickedElement = event.target
+        if (clickedElement.className === "buy-ticket") {
+            let eventID = clickedElement.getAttribute("event-id")
+            fetchBuyTicket(eventID,"1") // fake user ID
+            let ticketsLeft = clickedElement.previousSibling.lastChild
+            ticketsLeft.innerText = ticketsLeft.innerText - 1
+        }
+    })
 
 })
     
@@ -27,10 +40,10 @@ function showEvents(eJSON){
 ///////////////////////////////////////
 ///////////////////////////////////////
 
-function eventDisplay(eJSON){
+function eventDisplay(eventJSON){
     let eventElement = document.createElement('div')
 
-    eventElement.setAttribute('data-user-id', eJSON["user_id"])
+    eventElement.setAttribute('data-user-id', eventJSON["user_id"])
 
     // eventElement.dataset.userId = eventJSON["user_id"] is equivalent. 
     
@@ -59,13 +72,13 @@ function eventDisplay(eJSON){
 
     if (eJSON["max_attendees"]){
         let eventMaxAttendees = document.createElement('p')
-        eventMaxAttendees.innerText = `Tickets Left: ${eJSON["max_attendees"]}`
-        // console.log("this value is not null!")
+        eventMaxAttendees.innerHTML = `Tickets Left: <span class="tickets-left">${eJSON["max_attendees"]-eJSON.tickets.length}</span>`
         eventElement.appendChild(eventMaxAttendees)
     }
     
     let buyTicketButton = document.createElement("button")
-    buyTicketButton.setAttribute('data-event-id',eJSON.id)
+    buyTicketButton.className = "buy-ticket"
+    buyTicketButton.setAttribute('event-id',eJSON.id)
     buyTicketButton.innerText = "Buy Ticket"
     eventElement.appendChild(buyTicketButton)
 
@@ -110,3 +123,22 @@ function turnOffDivsExcept(divIdToKeep) {
     })
 }
 
+function getDataFromCreateEventForm() {
+    // make empty data hash
+    let newEventData = {
+        title: null,
+        location: null,
+        date: null,
+        start_time: null,
+        end_time: null,
+        min_age: null,
+        max_attendees: null,
+        img_url: null
+    }
+    
+    for (let [key,value] of Object.entries(newEventData)) {
+        newEventData[`${key}`] = document.querySelector(`#${key}`).value
+    }
+
+    return newEventData
+}
