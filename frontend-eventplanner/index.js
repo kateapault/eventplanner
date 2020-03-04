@@ -1,14 +1,29 @@
 let baseURL = 'http://localhost:3000'
 let eventsURL = `${baseURL}/events`
+let loggedInID
  
 document.addEventListener("DOMContentLoaded", () => {
     console.log("We are loaded now")
 
-    fetchAllEvents()
+    console.log("no loggedInID yet!")
+    document.querySelector('#logout').style.display = "none"
+    let loginSignup = document.querySelector("div#login-signup")
+    loginSignup.style.height = "100vh"
+    loginSignup.style.width = "100vw"
 
-    let events = fetch(eventsURL)
-    .then(response => response.json())  
-    .then(showEvents);
+    document.querySelector("#login-form").addEventListener("submit",(event) => {
+        event.preventDefault()
+        fetchLogin()
+    })
+    
+    document.querySelector("#signup-form").addEventListener("submit",(event) => {
+        event.preventDefault()
+        let signupData = getDataFromSignupForm()
+        fetchSignup(signupData)
+        document.querySelector('#login-signup').style.display = "none"
+        document.querySelector('#logout').style.display = "inline"
+        fetchAllEvents()
+    })
 
     // document.querySelector("form").addEventListener("submit",(event) => {
     //     event.preventDefault()
@@ -27,11 +42,15 @@ document.addEventListener("DOMContentLoaded", () => {
     //     }
     // })
 
+    let logoutButton = document.querySelector('#logout')
+    logoutButton.addEventListener("click", () => {
+        location = location
+    })
+
 })
     
 function showEvents(eJSON){
     let cardsDiv = document.querySelector('.cards')
-    // showEventsDiv.style.display = "block"
     eJSON.forEach(event => {
         cardsDiv.appendChild(eventDisplay(event))
     });
@@ -145,4 +164,20 @@ function getDataFromCreateEventForm() {
     }
 
     return newEventData
+}
+
+function getDataFromSignupForm() {
+    let newUserData = {
+        username: null,
+        name: null,
+        age: null,
+        email: null,
+        phone: null
+    }
+
+    for (let [key,value] of Object.entries(newUserData)) {
+        newUserData[`${key}`] = document.querySelector(`#${key}`).value
+    }
+
+    return newUserData
 }
