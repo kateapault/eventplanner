@@ -31,6 +31,6 @@ class EventsController < ApplicationController
   #strong params needed.
   private 
   def event_params
-    params.require(:event).permit(:id, :title, :date, :start_time, :end_time, :min_age, :max_attendees, :img_url, :location, :user_id)
+    params.require(:event).permit(:id, :title, :date, :start_time, :end_time, :min_age, :max_attendees, :img_url, :location, :user_id, tickets: [ :user_id, :event_id ])
   end
 end

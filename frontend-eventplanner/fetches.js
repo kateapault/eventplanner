@@ -1,7 +1,8 @@
 const BASEURL = 'http://localhost:3000'
 const EVENTSURL = `${BASEURL}/events`
+const USERSURL = `${BASEURL}/users`
 const TICKETSURL = `${BASEURL}/tickets`
-// users?
+// users has 
 
 function fetchAllEvents() {
     // GET      | returns array of event JSONs
@@ -27,12 +28,26 @@ function fetchSingleEvent(eventID) {
 }
 
 function fetchBuyTicket(eventID,userID) {
+    let data = {
+        user_id: userID,
+        event_id: eventID
+    }
+    console.log(`data:`)
+    console.log(data)
     // POST     |
+    fetch(TICKETSURL, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(resp => console.log(resp.json()))
 }
 
 function fetchUsersTickets(userID) {
     // GET      | returns array of ticket JSONs
-    fetch(TICKETSURL)
+    fetch(USERSURL)
     .then(response => response.json())
     .then(eventJSON);
     function eventJSON(resp){
@@ -64,7 +79,7 @@ function fetchCreateNewEvent(userID) {          // This does not reload DOM but 
     fetch(EVENTSURL, {
         method: "POST",
         headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
     })

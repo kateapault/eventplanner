@@ -3,24 +3,12 @@ let eventsURL = `${baseURL}/events`
  
 document.addEventListener("DOMContentLoaded", () => {
     console.log("We are loaded now")
-    // turnOffDivsExcept('show-events')
-    // document.querySelector('#create-event').style.display = "none"
+
     fetchAllEvents()
-    // let events = fetch(eventsURL)
-    // .then(response => response.json())  
-    // .then(eventsJSON);
 
-    // function eventsJSON(resp) {
-    //     console.log("we are receiving response");
-    //     console.log(resp);
-    //     showEvents(resp)
-    // }
-
-    document.querySelector("#nav").addEventListener("click",(event) => {
-        if (event.target.className === "nav") {
-            turnOffDivsExcept(event.target.pointsTo)
-        }
-    })
+    let events = fetch(eventsURL)
+    .then(response => response.json())  
+    .then(showEvents);
 
     document.querySelector("form").addEventListener("submit",(event) => {
         event.preventDefault()
@@ -28,25 +16,35 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelector("form").reset()
     })
 
+    let eventsList = document.querySelector("#show-events")
+    eventsList.addEventListener("click", (event) => {
+        let clickedElement = event.target
+        if (clickedElement.className === "buy-ticket") {
+            let eventID = clickedElement.getAttribute("event-id")
+            fetchBuyTicket(eventID,"1") // fake user ID
+        }
+    })
+
 })
     
-///////////////////////////////////////
-///////////////////////////////////////
-
-function showEvents(eventsJSON){
+function showEvents(eJSON){
     let showEventsDiv = document.querySelector('#show-events')
     showEventsDiv.style.display = "block"
-    eventsJSON.forEach(event => {
-        showEventsDiv.appendChild(eventDisplayInList(event))
+    eJSON.forEach(event => {
+        showEventsDiv.appendChild(eventDisplay(event))
     });
 }
 
 ///////////////////////////////////////
 ///////////////////////////////////////
 
-function eventDisplayInList(eventJSON){
+function eventDisplay(eventJSON){
     let eventElement = document.createElement('div')
-    eventElement.setAttribute('data-user-id',eventJSON["user_id"])
+
+    eventElement.setAttribute('data-user-id', eventJSON["user_id"])
+
+    // eventElement.dataset.userId = eventJSON["user_id"] is equivalent. 
+    
     eventElement.className = "event-list"
     
     if (eventJSON["img_url"]) {
@@ -73,12 +71,12 @@ function eventDisplayInList(eventJSON){
     if (eventJSON["max_attendees"]){
         let eventMaxAttendees = document.createElement('p')
         eventMaxAttendees.innerText = `Tickets Left: ${eventJSON["max_attendees"]}`
-        console.log("this value is not null!")
         eventElement.appendChild(eventMaxAttendees)
     }
     
     let buyTicketButton = document.createElement("button")
-    buyTicketButton.setAttribute('data-event-id',eventJSON.id)
+    buyTicketButton.className = "buy-ticket"
+    buyTicketButton.setAttribute('event-id',eventJSON.id)
     buyTicketButton.innerText = "Buy Ticket"
     eventElement.appendChild(buyTicketButton)
 
