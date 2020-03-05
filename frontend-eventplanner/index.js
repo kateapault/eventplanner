@@ -286,26 +286,33 @@ function fetchCreateNewEvent() { /////////// This does not reload DOM but is pos
 //////////////////////////////////////////////////////
 
 function myCreatedEvents() { ////////////////////////////////////////////////////////
-    document.querySelector("#main-view").innerHTML = ''
+    let mainView = document.querySelector("#main-view")
+    mainView.innerHTML = ''
+
+    if (!!loggedInID) {
+        fetchUsersCreatedEvents()
+    } else {
+        mainView.innerHTML = "<h1>Something has gone wrong... there doesn't seem to be a logged in user!</h1>"
+    }
 }
 
 function fetchUsersCreatedEvents() { ///////////////////////////////////////////////
     // GET      | returns array of event JSONs
-    let usersCreatedEvents = []
-    fetch(USERSURL)
+    let cardsDiv = document.createElement("div")
+    cardsDiv.className = "cards"
+
+    fetch(EVENTSURL)
     .then(response => response.json())
-    .then(resp => {
-        console.log(`loggedInId: ${loggedInID}`)
-        resp.forEach(user => {
-            if (user.id == loggedInID) {
-                console.log("we have a match!")
-                usersCreatedEvents = user.events
-            } else {
-                console.log("no match")
+    .then(myEvents)
+    function myEvents(resp) {
+        resp.forEach(event => {
+            if (event.user_id == loggedInID) {
+                cardsDiv.appendChild(eventDisplay(event))
             }
         })
-    })
-    return usersCreatedEvents
+    }
+
+    document.querySelector("#main-view").appendChild(cardsDiv)
 }
 
 ///////////////////////////////////////
