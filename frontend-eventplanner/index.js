@@ -53,18 +53,20 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelector("#nav").addEventListener("click", (event) => {
         let clickedElement = event.target
 
-        let viewDiv = document.create
         switch (clickedElement.id) {
             case "show-events":
                 allEvents()
             case "create-event":
+                // clickedElement.preventDefault()
                 createEvent()
             case "my-tickets":
+                // clickedElement.preventDefault()
                 myTickets()
             case "my-created-events":
+                // clickedElement.preventDefault()
                 myCreatedEvents()
             case "logout":
-                location = location
+
         }
 
     })
@@ -88,7 +90,6 @@ function fetchAllEvents() { ////////////////////////////////////////////////////
     .then(response => response.json())  
     .then(eventsJSON);
     function eventsJSON(resp) {
-        console.log("we are receiving response for fetch all events");
         showEvents(resp)
     }
 }
@@ -111,9 +112,6 @@ function eventDisplay(eJSON){ //////////////////////////////////////////////////
     eventWrapper.appendChild(eventElement)
 
     eventElement.setAttribute('data-user-id', eJSON["user_id"])
-
-    // eventElement.dataset.userId = eJSON["user_id"] is equivalent. 
-    
     eventElement.className = "card"
     
     if (eJSON["img_url"]) {
@@ -129,7 +127,6 @@ function eventDisplay(eJSON){ //////////////////////////////////////////////////
     let eventLocation = document.createElement("p")
     eventLocation.innerText = eJSON.location
     eventElement.appendChild(eventLocation)
-
 
     if (!!eJSON["min_age"]){
         let eventMaxAge = document.createElement('p')
@@ -159,8 +156,6 @@ function fetchBuyTicket(eventID,userID) { //////////////////////////////////////
         user_id: userID,
         event_id: eventID
     }
-    console.log(`data:`)
-    console.log(data)
     // POST     |
     fetch(TICKETSURL, {
         method: "POST",
