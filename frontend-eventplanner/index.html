@@ -5,30 +5,19 @@
         <title>Events Planner</title>
         <link rel="stylesheet" type = "text/css" href="styles.css">
         <script src="index.js"></script>
-        <script src="fetches.js"></script>
     </head>
     <body>
         <header>
         <div id="nav">
-            <button class="nav" data-points-to="show-events">All Events</button>
-            <button class="nav" data-points-to="user-tickets">My Tickets</button>
-            <button class="nav" data-points-to="create-event">Create Event</button>
-            <button class="nav" data-points-to="user-created-events">My Created Events</button>
+            <button class="nav" id="show-events">All Events</button>
+            <button class="nav" id="user-tickets">My Tickets</button>
+            <button class="nav" id="create-event">Create Event</button>
+            <button class="nav" id="my-created-events">My Created Events</button>
             <button class="nav" id="logout">Log Out</button>
         </div>
         </header>
         <div id="main-view">
-
-            <div id="login">
-                <form id="login-form">
-                    <label for="login-username">Enter username: </label>
-                    <input type="text" id="login-username">
-                    <button id="login-submit">Log In</button>
-                </form>
-            </div>
-        </div>
         
-        <h1>All Events</h1>
 
         <div class = "cards">   
             <div id="show-events">
