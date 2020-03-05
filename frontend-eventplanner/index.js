@@ -52,21 +52,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.querySelector("#nav").addEventListener("click", (event) => {
         let clickedElement = event.target
-
+        console.log(`clicked element: ${clickedElement.id}`)
         switch (clickedElement.id) {
             case "show-events":
                 allEvents()
+                break
             case "create-event":
-                // clickedElement.preventDefault()
                 createEvent()
+                break
             case "my-tickets":
-                // clickedElement.preventDefault()
                 myTickets()
+                break
             case "my-created-events":
-                // clickedElement.preventDefault()
                 myCreatedEvents()
+                break
             case "logout":
-
+                location = location
+                break
         }
 
     })
@@ -208,13 +210,24 @@ function createEvent() { ///////////////////////////////////////////////////////
 }
 
 function showCreateEventForm() { ////////////////////////////////////////////////////////
-    let mainDiv = document.querySelector('#main-view')
+    // newInput(inputType,inputId,placeholderText,labelText,parentForm) 
 
     let createEventForm = document.createElement('form')
-
+    newInput('text','title','Event Title','Event Title: ',createEventForm)
+    newInput('text','location','New York City','Event Location: ',createEventForm)
+    newInput('date','date',todaysDate(),'Date: ',createEventForm)
+    newInput('text','start_time','4:00 PM','Start Time: ',createEventForm)
+    newInput('text','end_time','10:00 PM','End Time: ',createEventForm)
+    newInput('number','max_attendees','30','Total Number of Tickets: ',createEventForm)
+    newInput('number','min_age','18','Minimum Age for Event: ',createEventForm)
+    newInput('url','img_url','paste image url here','Image URL: ',createEventForm)
     
+    let submitButton = document.createElement('button')
+    submitButton.id = 'submit'
+    submitButton.innerText = 'Sign Up'
+    createEventForm.appendChild(submitButton)
 
-    // document.querySelector('#date').setAttribute('max',${todaysDate()})
+    document.querySelector("#main-view").appendChild(createEventForm)
 }
 
 function todaysDate() {
