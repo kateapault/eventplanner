@@ -94,10 +94,13 @@ function fetchAllEvents() { ////////////////////////////////////////////////////
 }
 
 function showEvents(eJSON){ /////////////////////////////////////////////////////////
-    let cardsDiv = document.querySelector('.cards')
+    let cardsDiv = document.createElement("div")
+    cardsDiv.className = "cards"
     eJSON.forEach(event => {
         cardsDiv.appendChild(eventDisplay(event))
     });
+
+    document.querySelector("#main-view").appendChild(cardsDiv)
 }
 
 function eventDisplay(eJSON){ //////////////////////////////////////////////////////////
@@ -213,9 +216,10 @@ function showCreateEventForm() { ///////////////////////////////////////////////
     let mainDiv = document.querySelector('#main-view')
 
     let createEventForm = document.createElement('form')
+
     
 
-    document.querySelector('#date').setAttribute('max',${todaysDate()})
+    // document.querySelector('#date').setAttribute('max',${todaysDate()})
 }
 
 function todaysDate() {
