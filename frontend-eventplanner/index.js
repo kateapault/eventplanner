@@ -37,10 +37,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     })
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 0b60680faf7a374f169b2872ae09548276e9748e
     document.querySelector("#nav").addEventListener("click", (event) => {
         let clickedElement = event.target
         switch (clickedElement.id) {
