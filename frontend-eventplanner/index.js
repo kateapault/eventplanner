@@ -6,7 +6,7 @@ let loggedInID
  
 document.addEventListener("DOMContentLoaded", () => {
     console.log("We are loaded now")
-    document.querySelector('#logout').style.display = "none"
+    document.querySelector('#nav').style.display = "none"
 
     document.querySelector("#login-form").addEventListener("submit",(event) => {
         event.preventDefault()
@@ -16,29 +16,33 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelector("#signup-form").addEventListener("submit",(event) => {
         event.preventDefault()
         fetchSignup()
+        document.querySelector("#main-view").innerHTML = ''
+        document.querySelector('#nav').style.display = 'block'
+        allEvents()
     })
-
-    // document.querySelector("form").addEventListener("submit",(event) => {
-    //     event.preventDefault()
-    //     fetchCreateNewEvent("1")
-    //     document.querySelector("form").reset()
-    // })
 
     let mainDiv = document.querySelector("#main-view")
     mainDiv.addEventListener("click", (event) => {
         let clickedElement = event.target
         if (clickedElement.className === "buy-ticket") {
             let eventID = clickedElement.getAttribute("event-id")
-            fetchBuyTicket(eventID,"1") // fake user ID
+            fetchBuyTicket(eventID)
             let ticketsLeft = clickedElement.previousSibling.lastChild
             ticketsLeft.innerText = ticketsLeft.innerText - 1
+        } else if (clickedElement.id === "submit-event") {
+            event.preventDefault()
+            fetchCreateNewEvent(loggedInID)
+            document.querySelector("form").reset()
+            allEvents()
         }
     })
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0b60680faf7a374f169b2872ae09548276e9748e
     document.querySelector("#nav").addEventListener("click", (event) => {
         let clickedElement = event.target
-        console.log(`clicked element: ${clickedElement.id}`)
         switch (clickedElement.id) {
             case "show-events":
                 allEvents()
@@ -139,9 +143,9 @@ function eventDisplay(eJSON){ //////////////////////////////////////////////////
     return eventWrapper
 }
 
-function fetchBuyTicket(eventID,userID) { //////////////////////////////////////////
+function fetchBuyTicket(eventID) { //////////////////////////////////////////
     let data = {
-        user_id: userID,
+        user_id: loggedInID,
         event_id: eventID
     }
     // POST     |
@@ -188,13 +192,10 @@ function fetchUsersTickets() { //////////////////////////////////////////////
 
 function ticketDisplay(ticketJSON,ul) {
     let ticketListing = ul.querySelector(`#event${ticketJSON["event_id"]}`)
-    console.log(` THIS TICKET LISTING IS ${ticketListing}`)
     if (ticketListing) {
-        console.log("there is already a ticket for this event")
         let numOfTickets = ticketListing.querySelector('span.num-tickets')
         numOfTickets.innerText = parseInt(numOfTickets.innerText) + 1
     } else {
-        console.log("there is no ticket for this event yet")
         newTicketListing = document.createElement("div")
         newTicketListing.id = `event${ticketJSON.event_id}`
         newTicketListing.innerHTML += `Event: <span class="event-link">${ticketJSON.event.title}</span><br>My tickets: <span class="num-tickets">1</span>`
@@ -231,11 +232,11 @@ function showCreateEventForm() { ///////////////////////////////////////////////
     newInput('url','img_url','paste image url here','Image URL: ',createEventForm)
     
     let submitButton = document.createElement('button')
-    submitButton.id = 'submit'
+    submitButton.id = 'submit-event'
     submitButton.innerText = 'Sign Up'
-    createEventForm.appendChild(submitButton)
 
     document.querySelector("#main-view").appendChild(createEventForm)
+    document.querySelector("#main-view").appendChild(submitButton)
 }
 
 function todaysDate() {
@@ -271,7 +272,6 @@ function fetchCreateNewEvent() { /////////// This does not reload DOM but is pos
     // POST     |
     let data = getDataFromCreateEventForm()
     data['user_id'] = loggedInID
-    console.log(data)
 
     fetch(EVENTSURL, {
         method: "POST",
@@ -281,8 +281,7 @@ function fetchCreateNewEvent() { /////////// This does not reload DOM but is pos
         body: JSON.stringify(data)
     })
     .then(resp => {
-        console.log(`post successful:`)
-        console.log(resp)
+        console.log(`post successful`)
     })
 
 }
@@ -362,7 +361,7 @@ function getDataFromSignupForm() { /////////////////////////////////////////////
         name: null,
         age: null,
         email: null,
-        phone: null
+        phone_number: null
     }
 
     for (let [key,value] of Object.entries(newUserData)) {
@@ -372,7 +371,8 @@ function getDataFromSignupForm() { /////////////////////////////////////////////
     return newUserData
 }
 
-function fetchSignup(userData) { /////////////////////////////////////////////////
+function fetchSignup() { /////////////////////////////////////////////////
+    let userData = getDataFromSignupForm()
     // POST     | adds user to db, returns newly created userID
     fetch(USERSURL,{
         method: "POST",
@@ -384,7 +384,6 @@ function fetchSignup(userData) { ///////////////////////////////////////////////
     .then(response => response.json())
     .then(newUser => {
         loggedInID = newUser.id
-        console.log(`loggedInID set to ${loggedInID}`)
     })
 }
 
@@ -398,7 +397,7 @@ function fetchLogin() { ////////////////////////////////////////////////////////
     .then(resp => {
         if (!!loggedInID) {
             document.querySelector("#main-view").innerHTML = ''
-            document.querySelector('#logout').style.display = 'inline'
+            document.querySelector('#nav').style.display = 'block'
             allEvents()
         } else {
             alert('Incorrect username. Please try again.')
