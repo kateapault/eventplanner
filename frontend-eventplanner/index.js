@@ -28,16 +28,16 @@ document.addEventListener("DOMContentLoaded", () => {
     //     document.querySelector("form").reset()
     // })
 
-    // let eventsList = document.querySelector("#show-events")
-    // eventsList.addEventListener("click", (event) => {
-    //     let clickedElement = event.target
-    //     if (clickedElement.className === "buy-ticket") {
-    //         let eventID = clickedElement.getAttribute("event-id")
-    //         fetchBuyTicket(eventID,"1") // fake user ID
-    //         let ticketsLeft = clickedElement.previousSibling.lastChild
-    //         ticketsLeft.innerText = ticketsLeft.innerText - 1
-    //     }
-    // })
+    let mainDiv = document.querySelector("#main-view")
+    mainDiv.addEventListener("click", (event) => {
+        let clickedElement = event.target
+        if (clickedElement.className === "buy-ticket") {
+            let eventID = clickedElement.getAttribute("event-id")
+            fetchBuyTicket(eventID,"1") // fake user ID
+            let ticketsLeft = clickedElement.previousSibling.lastChild
+            ticketsLeft.innerText = ticketsLeft.innerText - 1
+        }
+    })
 
     // let eventsList = document.querySelector("#show-events")
     // eventsList.addEventListener("click", (event) => {
@@ -180,20 +180,42 @@ function fetchBuyTicket(eventID,userID) { //////////////////////////////////////
 
 function myTickets() { ///////////////////////////////////////////////////////////
     document.querySelector("#main-view").innerHTML = ''
-
+    fetchUsersTickets()
 }
 
-function fetchUsersTickets(userID) { //////////////////////////////////////////////
+function fetchUsersTickets() { //////////////////////////////////////////////
+    let ul = document.createElement('ul')
+    document.querySelector('#main-view').appendChild(ul)
     // GET      | returns array of ticket JSONs
-    fetch(USERSURL)
+    fetch(TICKETSURL)
     .then(response => response.json())
-    .then(eventJSON);
-    function eventJSON(resp){
-        console.log(`resp: ${resp}`)
-        // show concerts 
-        // if (ticket.user_id === userID) {
-        //     console.log(ticket)
-        // }
+    .then(ticketsJSON);
+    function ticketsJSON(resp){
+        // ticketDisplay(resp[0],ul)
+        resp.forEach(ticket => {
+            if (ticket.user_id == loggedInID) {
+                ticketDisplay(ticket,ul)
+            }
+        })
+    }
+}
+
+function ticketDisplay(ticketJSON,ul) {
+    let ticketListing = ul.querySelector(`#event${ticketJSON["event_id"]}`)
+    console.log(` THIS TICKET LISTING IS ${ticketListing}`)
+    if (ticketListing) {
+        console.log("there is already a ticket for this event")
+        let numOfTickets = ticketListing.querySelector('span.num-tickets')
+        numOfTickets.innerText = parseInt(numOfTickets.innerText) + 1
+    } else {
+        console.log("there is no ticket for this event yet")
+        newTicketListing = document.createElement("div")
+        newTicketListing.id = `event${ticketJSON.event_id}`
+        newTicketListing.innerHTML += `Event: <span class="event-link">${ticketJSON.event.title}</span><br>My tickets: <span class="num-tickets">1</span>`
+
+        let li = document.createElement('li')
+        li.appendChild(newTicketListing)
+        ul.appendChild(li)
     }
 }
 
