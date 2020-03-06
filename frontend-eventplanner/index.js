@@ -7,14 +7,16 @@ let loggedInID
 document.addEventListener("DOMContentLoaded", () => {
     console.log("We are loaded now")
     document.querySelector('#logout').style.display = "none"
-    generateSignupForm()
-    generateLoginForm()
 
     document.querySelector("#login-form").addEventListener("submit",(event) => {
         event.preventDefault()
         fetchLogin()
     })
     
+    document.querySelector("#signup-form").addEventListener("submit",(event) => {
+        event.preventDefault()
+        fetchSignup()
+    })
 
 
     document.querySelector("#signup-form").addEventListener("submit",(event) => {
@@ -369,24 +371,6 @@ function fetchUsersCreatedEvents() { ///////////////////////////////////////////
  //////////////////////////////////////////////////////
 //////////////////////////////////////////////////////
 
-function generateSignupForm() { //////////////////////////////////////////////////
-    let viewDiv = document.querySelector("div#main-view")
-
-    let signupForm = document.createElement('form')
-    signupForm.id = 'signup-form'
-    newInput('text','username','username','Username: ',signupForm)
-    newInput('text','name','Firstname Lastname','Name: ',signupForm)
-    newInput('number','age','18','Age: ',signupForm)
-    newInput('text','email','me@example.com','Email: ',signupForm)
-    newInput('number','phone_number','5556667788','Phone: ',signupForm)
-
-    let submitButton = document.createElement('button')
-    submitButton.id = 'signup-submit'
-    submitButton.innerText = 'Sign Up'
-    signupForm.appendChild(submitButton)
-
-    viewDiv.appendChild(signupForm)
-}
 
 function getDataFromSignupForm() { ///////////////////////////////////////////////
     let newUserData = {
@@ -418,21 +402,6 @@ function fetchSignup(userData) { ///////////////////////////////////////////////
         loggedInID = newUser.id
         console.log(`loggedInID set to ${loggedInID}`)
     })
-}
-
-function generateLoginForm() { ////////////////////////////////////////////////////
-    let viewDiv = document.querySelector("div#main-view")
-    
-    let loginForm = document.createElement('form')
-    loginForm.id = "login-form"
-    newInput('text','login-username','login-username','Username: ',loginForm)
-
-    let submitButton = document.createElement('button')
-    submitButton.id = 'login-submit'
-    submitButton.innerText = 'Sign Up'
-    loginForm.appendChild(submitButton)
-
-    viewDiv.appendChild(loginForm)
 }
 
 function fetchLogin() { /////////////////////////////////////////////////////////
