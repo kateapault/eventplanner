@@ -17,16 +17,16 @@ document.addEventListener("DOMContentLoaded", () => {
     
 
 
-    // document.querySelector("#signup-form").addEventListener("submit",(event) => {
-    //     event.preventDefault()
-    //     let signupData = getDataFromSignupForm()
-    //     fetchSignup(signupData)
+    document.querySelector("#signup-form").addEventListener("submit",(event) => {
+        event.preventDefault()
+        let signupData = getDataFromSignupForm()
+        fetchSignup(signupData)
 
-    // document.querySelector("form").addEventListener("submit",(event) => {
-    //     event.preventDefault()
-    //     fetchCreateNewEvent("1")
-    //     document.querySelector("form").reset()
-    // })
+    document.querySelector("form").addEventListener("submit",(event) => {
+        event.preventDefault()
+        fetchCreateNewEvent("1")
+        document.querySelector("form").reset()
+    })
 
     let mainDiv = document.querySelector("#main-view")
     mainDiv.addEventListener("click", (event) => {
@@ -472,3 +472,5 @@ function newInput(inputType,inputId,placeholderText,labelText,parentForm) { ////
     parentForm.appendChild(label)
     parentForm.appendChild(input)
 }
+
+})

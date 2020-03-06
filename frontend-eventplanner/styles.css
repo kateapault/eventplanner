@@ -38,10 +38,11 @@
   }
 
   .info {
-    width: 45%;
-    background: rgba(20, 20, 20, .8);
+    width: 50%;
+    background: rgba(255, 250, 230, 0.5);
     padding: 50px 0;
     border-right: 10px solid rgba(30, 30, 30, .8);
+    border-left: 10px solid rgba(30, 30, 30, .8);
   }
   
 
@@ -59,7 +60,7 @@
   }
 
   .login-btn {
-    border: 1px solid rgba(10, 180, 180, 1);
+    border: 1px solid rgb(67, 10, 180);
     background: rgba(20, 20, 20, .6);
     font-size: 18px;
     color: white;
@@ -84,7 +85,7 @@
   }
 
   .join-btn {
-    border: 1px solid rgba(10, 180, 180, 1);
+    border: 1px solid rgba(67, 10, 180, 1);
     background: rgba(20, 20, 20, .6);
     font-size: 18px;
     color: white;
