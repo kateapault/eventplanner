@@ -1,13 +1,15 @@
-
+:root {
+  --nav-bar-color:  rgba(179, 236, 255, .8 );
+}
 
 #nav {
-    background-color: darkgreen;
+    background-color: var(--nav-bar-color);
 }
 
 .nav {
-    background-color: darkgreen;
+    background-color: var(--nav-bar-color);
     border: none;
-    color: white;
+    color: darkslategrey;
     padding: 2vw 2vh;
     text-align: center;
     text-decoration: none;
@@ -16,8 +18,8 @@
 }
 
 .nav:hover {
-    background-color:  #4CAF50; /* Green */
-    color: darkgreen;
+    background-color:  darkslategrey; 
+    color: var(--nav-bar-color);
 }
 
 
