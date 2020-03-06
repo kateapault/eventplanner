@@ -18,17 +18,11 @@ document.addEventListener("DOMContentLoaded", () => {
         fetchSignup()
     })
 
-
-    document.querySelector("#signup-form").addEventListener("submit",(event) => {
-        event.preventDefault()
-        let signupData = getDataFromSignupForm()
-        fetchSignup(signupData)
-
-    document.querySelector("form").addEventListener("submit",(event) => {
-        event.preventDefault()
-        fetchCreateNewEvent("1")
-        document.querySelector("form").reset()
-    })
+    // document.querySelector("form").addEventListener("submit",(event) => {
+    //     event.preventDefault()
+    //     fetchCreateNewEvent("1")
+    //     document.querySelector("form").reset()
+    // })
 
     let mainDiv = document.querySelector("#main-view")
     mainDiv.addEventListener("click", (event) => {
