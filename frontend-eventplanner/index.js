@@ -1,35 +1,43 @@
-let baseURL = 'http://localhost:3000'
-let eventsURL = `${baseURL}/events`
+const BASEURL = 'http://localhost:3000'
+const EVENTSURL = `${BASEURL}/events`
+const USERSURL = `${BASEURL}/users`
+const TICKETSURL = `${BASEURL}/tickets`
 let loggedInID
  
 document.addEventListener("DOMContentLoaded", () => {
     console.log("We are loaded now")
-
-    console.log("no loggedInID yet!")
     document.querySelector('#logout').style.display = "none"
-    let loginSignup = document.querySelector("div#login-signup")
-    loginSignup.style.height = "100vh"
-    loginSignup.style.width = "100vw"
+    generateSignupForm()
+    generateLoginForm()
 
     document.querySelector("#login-form").addEventListener("submit",(event) => {
         event.preventDefault()
         fetchLogin()
     })
     
-    document.querySelector("#signup-form").addEventListener("submit",(event) => {
-        event.preventDefault()
-        let signupData = getDataFromSignupForm()
-        fetchSignup(signupData)
-        document.querySelector('#login-signup').style.display = "none"
-        document.querySelector('#logout').style.display = "inline"
-        fetchAllEvents()
-    })
+
+
+    // document.querySelector("#signup-form").addEventListener("submit",(event) => {
+    //     event.preventDefault()
+    //     let signupData = getDataFromSignupForm()
+    //     fetchSignup(signupData)
 
     // document.querySelector("form").addEventListener("submit",(event) => {
     //     event.preventDefault()
     //     fetchCreateNewEvent("1")
     //     document.querySelector("form").reset()
     // })
+
+    let mainDiv = document.querySelector("#main-view")
+    mainDiv.addEventListener("click", (event) => {
+        let clickedElement = event.target
+        if (clickedElement.className === "buy-ticket") {
+            let eventID = clickedElement.getAttribute("event-id")
+            fetchBuyTicket(eventID,"1") // fake user ID
+            let ticketsLeft = clickedElement.previousSibling.lastChild
+            ticketsLeft.innerText = ticketsLeft.innerText - 1
+        }
+    })
 
     // let eventsList = document.querySelector("#show-events")
     // eventsList.addEventListener("click", (event) => {
@@ -42,24 +50,63 @@ document.addEventListener("DOMContentLoaded", () => {
     //     }
     // })
 
-    let logoutButton = document.querySelector('#logout')
-    logoutButton.addEventListener("click", () => {
-        location = location
+    document.querySelector("#nav").addEventListener("click", (event) => {
+        let clickedElement = event.target
+        console.log(`clicked element: ${clickedElement.id}`)
+        switch (clickedElement.id) {
+            case "show-events":
+                allEvents()
+                break
+            case "create-event":
+                createEvent()
+                break
+            case "my-tickets":
+                myTickets()
+                break
+            case "my-created-events":
+                myCreatedEvents()
+                break
+            case "logout":
+                location = location
+                break
+        }
+
     })
 
-})
-    
-function showEvents(eJSON){
-    let cardsDiv = document.querySelector('.cards')
+}) ////////// DOMContentLoaded ///////////////
+
+    //////////////////////////////////////////////////////
+   //////////////////////////////////////////////////////
+  ////////////////// SHOW ALL EVENTS ///////////////////
+ //////////////////////////////////////////////////////
+//////////////////////////////////////////////////////
+
+function allEvents() { ////////////////////////////////////////////////////////////
+    document.querySelector("#main-view").innerHTML = ''
+    fetchAllEvents()
+}
+
+function fetchAllEvents() { //////////////////////////////////////////////////////
+    // GET      | returns array of event JSONs
+    fetch(EVENTSURL)
+    .then(response => response.json())  
+    .then(eventsJSON);
+    function eventsJSON(resp) {
+        showEvents(resp)
+    }
+}
+
+function showEvents(eJSON){ /////////////////////////////////////////////////////////
+    let cardsDiv = document.createElement("div")
+    cardsDiv.className = "cards"
     eJSON.forEach(event => {
         cardsDiv.appendChild(eventDisplay(event))
     });
+
+    document.querySelector("#main-view").appendChild(cardsDiv)
 }
 
-///////////////////////////////////////
-///////////////////////////////////////
-
-function eventDisplay(eJSON){
+function eventDisplay(eJSON){ //////////////////////////////////////////////////////////
     let eventWrapper = document.createElement('div');
     eventWrapper.className = "wrapper"
 
@@ -67,9 +114,6 @@ function eventDisplay(eJSON){
     eventWrapper.appendChild(eventElement)
 
     eventElement.setAttribute('data-user-id', eJSON["user_id"])
-
-    // eventElement.dataset.userId = eJSON["user_id"] is equivalent. 
-    
     eventElement.className = "card"
     
     if (eJSON["img_url"]) {
@@ -86,7 +130,6 @@ function eventDisplay(eJSON){
     eventLocation.innerText = eJSON.location
     eventElement.appendChild(eventLocation)
 
-
     if (!!eJSON["min_age"]){
         let eventMaxAge = document.createElement('p')
         eventMaxAge.innerText = `Minimum Age: ${eJSON["min_age"]}`
@@ -99,55 +142,127 @@ function eventDisplay(eJSON){
         eventElement.appendChild(eventMaxAttendees)
     }
     
-    let buyTicketButton = document.createElement("button")
-    buyTicketButton.className = "buy-ticket"
-    buyTicketButton.setAttribute('event-id',eJSON.id)
-    buyTicketButton.innerText = "Buy Ticket"
-    eventElement.appendChild(buyTicketButton)
+    if (eJSON.user_id != loggedInID) {
+        let buyTicketButton = document.createElement("button")
+        buyTicketButton.className = "buy-ticket"
+        buyTicketButton.setAttribute('event-id',eJSON.id)
+        buyTicketButton.innerText = "Buy Ticket"
+        eventElement.appendChild(buyTicketButton)
+    }
 
     return eventWrapper
 }
 
-function eventDisplaySingle(eJSON) {
-    let eventElement = document.querySelector("div#single-event")
-
-    let eventDateAndTime = document.createElement("div")
-    eventDateAndTime.innerText = `${eJSON.date}`
-    eventDateAndTime.innerText += ` | Start: ${eJSON["start_time"]}`
-    eventDateAndTime.innerText += ` | End: ${eJSON["end_time"]}`
-    eventElement.appendChild(eventDateAndTime)
+function fetchBuyTicket(eventID,userID) { //////////////////////////////////////////
+    let data = {
+        user_id: userID,
+        event_id: eventID
+    }
+    // POST     |
+    fetch(TICKETSURL, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(resp => console.log(resp.json()))
 }
 
 
-////////////////////////////////
-////////////////////////////////
 
-function showEventForm() {
-    document.querySelector('#show-events')
-    document.querySelector('#create-event')
+
+    //////////////////////////////////////////////////////
+   //////////////////////////////////////////////////////
+  ////////////// DISPLAY USER'S TICKETS ////////////////
+ //////////////////////////////////////////////////////
+//////////////////////////////////////////////////////
+
+function myTickets() { ///////////////////////////////////////////////////////////
+    document.querySelector("#main-view").innerHTML = ''
+    fetchUsersTickets()
+}
+
+function fetchUsersTickets() { //////////////////////////////////////////////
+    let ul = document.createElement('ul')
+    document.querySelector('#main-view').appendChild(ul)
+    // GET      | returns array of ticket JSONs
+    fetch(TICKETSURL)
+    .then(response => response.json())
+    .then(ticketsJSON);
+    function ticketsJSON(resp){
+        // ticketDisplay(resp[0],ul)
+        resp.forEach(ticket => {
+            if (ticket.user_id == loggedInID) {
+                ticketDisplay(ticket,ul)
+            }
+        })
+    }
+}
+
+function ticketDisplay(ticketJSON,ul) {
+    let ticketListing = ul.querySelector(`#event${ticketJSON["event_id"]}`)
+    console.log(` THIS TICKET LISTING IS ${ticketListing}`)
+    if (ticketListing) {
+        console.log("there is already a ticket for this event")
+        let numOfTickets = ticketListing.querySelector('span.num-tickets')
+        numOfTickets.innerText = parseInt(numOfTickets.innerText) + 1
+    } else {
+        console.log("there is no ticket for this event yet")
+        newTicketListing = document.createElement("div")
+        newTicketListing.id = `event${ticketJSON.event_id}`
+        newTicketListing.innerHTML += `Event: <span class="event-link">${ticketJSON.event.title}</span><br>My tickets: <span class="num-tickets">1</span>`
+
+        let li = document.createElement('li')
+        li.appendChild(newTicketListing)
+        ul.appendChild(li)
+    }
+}
+
+
+    //////////////////////////////////////////////////////
+   //////////////////////////////////////////////////////
+  ////////////////// CREATE NEW EVENT //////////////////
+ //////////////////////////////////////////////////////
+//////////////////////////////////////////////////////
+
+function createEvent() { /////////////////////////////////////////////////////////
+    document.querySelector("#main-view").innerHTML = ''
+    showCreateEventForm()
+}
+
+function showCreateEventForm() { ////////////////////////////////////////////////////////
+    // newInput(inputType,inputId,placeholderText,labelText,parentForm) 
+
+    let createEventForm = document.createElement('form')
+    newInput('text','title','Event Title','Event Title: ',createEventForm)
+    newInput('text','location','New York City','Event Location: ',createEventForm)
+    newInput('date','date',todaysDate(),'Date: ',createEventForm)
+    newInput('text','start_time','4:00 PM','Start Time: ',createEventForm)
+    newInput('text','end_time','10:00 PM','End Time: ',createEventForm)
+    newInput('number','max_attendees','30','Total Number of Tickets: ',createEventForm)
+    newInput('number','min_age','18','Minimum Age for Event: ',createEventForm)
+    newInput('url','img_url','paste image url here','Image URL: ',createEventForm)
+    
+    let submitButton = document.createElement('button')
+    submitButton.id = 'submit'
+    submitButton.innerText = 'Sign Up'
+    createEventForm.appendChild(submitButton)
+
+    document.querySelector("#main-view").appendChild(createEventForm)
+}
+
+function todaysDate() {
     let today = new Date
     let dd = today.getDate()
     dd.length === 1 ? (dd = '0' + dd) : (dd)
     let mm = today.getMonth()
     mm.length === 1 ? (mm = '0' + mm) : (mm)
     let yyyy = today.getFullYear()
-    document.querySelector('#date').setAttribute('max',`${yyyy}-${mm}-${dd}`)
+    return `${yyyy}-${mm}-${dd}`
 }
 
-// function turnOffDivsExcept(divIdToKeep) {
-//     let divs = document.querySelectorAll("body>div")
-//     divs.forEach( div => {
-//         // switch div.id
-//         if (div.id === "nav" || div.id === divIdToKeep) {
-//             div.style.display = "block"
-//         } else {
-//             div.style.display = "none"
-//         }
-//     })
-// }
-
-function getDataFromCreateEventForm() {
-    // make empty data hash
+function getDataFromCreateEventForm() { ///////////////////////////////////////////
     let newEventData = {
         title: null,
         location: null,
@@ -166,7 +281,114 @@ function getDataFromCreateEventForm() {
     return newEventData
 }
 
-function getDataFromSignupForm() {
+function fetchCreateNewEvent() { /////////// This does not reload DOM but is posting correctly
+    // POST     |
+    let data = getDataFromCreateEventForm()
+    data['user_id'] = loggedInID
+    console.log(data)
+
+    fetch(EVENTSURL, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(resp => {
+        console.log(`post successful:`)
+        console.log(resp)
+    })
+
+}
+
+    //////////////////////////////////////////////////////
+   //////////////////////////////////////////////////////
+  ////////// DISPLAY USER'S CREATED EVENTS /////////////
+ //////////////////////////////////////////////////////
+//////////////////////////////////////////////////////
+
+function myCreatedEvents() { ////////////////////////////////////////////////////////
+    let mainView = document.querySelector("#main-view")
+    mainView.innerHTML = ''
+
+    if (!!loggedInID) {
+        fetchUsersCreatedEvents()
+    } else {
+        mainView.innerHTML = "<h1>Something has gone wrong... there doesn't seem to be a logged in user!</h1>"
+    }
+}
+
+function fetchUsersCreatedEvents() { ///////////////////////////////////////////////
+    // GET      | returns array of event JSONs
+    let cardsDiv = document.createElement("div")
+    cardsDiv.className = "cards"
+
+    fetch(EVENTSURL)
+    .then(response => response.json())
+    .then(myEvents)
+    function myEvents(resp) {
+        resp.forEach(event => {
+            if (event.user_id == loggedInID) {
+                cardsDiv.appendChild(eventDisplay(event))
+            }
+        })
+    }
+
+    document.querySelector("#main-view").appendChild(cardsDiv)
+}
+
+///////////////////////////////////////
+///////////////////////////////////////
+// function fetchSingleEvent(eventID) {
+//     // GET      | returns event JSON
+//     fetch(`${EVENTSURL}/${eventID}`)
+//     .then(response => response.json())  
+//     .then(eventJSON);
+//     function eventJSON(resp) {
+//         console.log(resp);
+//         let singleEventDiv = document.querySelector('#single-event')
+//         singleEventDiv.innerHTML = eventDisplaySingle(resp)
+//     }
+// }
+
+// function eventDisplaySingle(eJSON) {
+//     let eventElement = document.querySelector("div#single-event")
+
+//     let eventDateAndTime = document.createElement("div")
+//     eventDateAndTime.innerText = `${eJSON.date}`
+//     eventDateAndTime.innerText += ` | Start: ${eJSON["start_time"]}`
+//     eventDateAndTime.innerText += ` | End: ${eJSON["end_time"]}`
+//     eventElement.appendChild(eventDateAndTime)
+// }
+
+
+
+    //////////////////////////////////////////////////////
+   //////////////////////////////////////////////////////
+  ////////////////////// SIGN UP FORM //////////////////
+ //////////////////////////////////////////////////////
+//////////////////////////////////////////////////////
+
+function generateSignupForm() { //////////////////////////////////////////////////
+    let viewDiv = document.querySelector("div#main-view")
+
+    let signupForm = document.createElement('form')
+    signupForm.id = 'signup-form'
+    newInput('text','username','username','Username: ',signupForm)
+    newInput('text','name','Firstname Lastname','Name: ',signupForm)
+    newInput('number','age','18','Age: ',signupForm)
+    newInput('text','email','me@example.com','Email: ',signupForm)
+    newInput('number','phone_number','5556667788','Phone: ',signupForm)
+
+    let submitButton = document.createElement('button')
+    submitButton.id = 'signup-submit'
+    submitButton.innerText = 'Sign Up'
+    signupForm.appendChild(submitButton)
+
+    viewDiv.appendChild(signupForm)
+}
+
+function getDataFromSignupForm() { ///////////////////////////////////////////////
     let newUserData = {
         username: null,
         name: null,
@@ -180,4 +402,73 @@ function getDataFromSignupForm() {
     }
 
     return newUserData
+}
+
+function fetchSignup(userData) { /////////////////////////////////////////////////
+    // POST     | adds user to db, returns newly created userID
+    fetch(USERSURL,{
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData)
+    })
+    .then(response => response.json())
+    .then(newUser => {
+        loggedInID = newUser.id
+        console.log(`loggedInID set to ${loggedInID}`)
+    })
+}
+
+function generateLoginForm() { ////////////////////////////////////////////////////
+    let viewDiv = document.querySelector("div#main-view")
+    
+    let loginForm = document.createElement('form')
+    loginForm.id = "login-form"
+    newInput('text','login-username','login-username','Username: ',loginForm)
+
+    let submitButton = document.createElement('button')
+    submitButton.id = 'login-submit'
+    submitButton.innerText = 'Sign Up'
+    loginForm.appendChild(submitButton)
+
+    viewDiv.appendChild(loginForm)
+}
+
+function fetchLogin() { /////////////////////////////////////////////////////////
+    // GET      | returns userID to then set
+    let loginUsername = document.querySelector('#login-username').value
+
+    fetch(USERSURL)
+    .then(response => response.json())
+    .then(findUserInList)
+    .then(resp => {
+        if (!!loggedInID) {
+            document.querySelector("#main-view").innerHTML = ''
+            document.querySelector('#logout').style.display = 'inline'
+            allEvents()
+        } else {
+            alert('Incorrect username. Please try again.')
+            location = location
+        }
+    })
+    function findUserInList(response) {
+        response.forEach(user => {
+            if (user.username == loginUsername) {
+                loggedInID = user.id
+            }
+        })
+    }
+}
+
+function newInput(inputType,inputId,placeholderText,labelText,parentForm) { //////////////////////
+    let label = document.createElement('label')
+    label.setAttribute('for',inputId)
+    label.innerText = labelText
+    let input = document.createElement('input')
+    input.setAttribute('type',inputType)
+    input.id = inputId
+    input.setAttribute('placeholder',placeholderText)
+    parentForm.appendChild(label)
+    parentForm.appendChild(input)
 }
