@@ -1,13 +1,18 @@
 :root {
-  --nav-bar-color:  rgba(179, 236, 255, .8 );
+  --nav-bar-color:  rgba(179, 236, 255, .7 );
 }
 
 #nav {
-    background-color: var(--nav-bar-color);
+  background-color: rgb(179, 204, 255,.4) ;
+  text-align: center;
+  border-style: groove;
+  width: 80% ; 
+  margin: auto;
 }
 
 .nav {
     background-color: var(--nav-bar-color);
+    text-align: center;
     border: none;
     color: darkslategrey;
     padding: 2vw 2vh;
@@ -97,6 +102,17 @@
     transition: .4s;
   }
 
+  .buy-ticket {
+    border: 1px solid rgba(67, 10, 180, 1);
+    background: rgba(20, 20, 20, .6);
+    font-size: 18px;
+    color: white;
+    margin-top: 20px;
+    padding: 10px 50px;
+    cursor: pointer;
+    transition: .4s;
+  }
+
   .noBullet {
     list-style-type: none;
     padding: 0;
@@ -141,16 +157,16 @@ html {
   }
 
   .card {
-    background-color:  #ffccff;
+    background-color:  #7b889b;
     border-radius: 15px 50px;
-    box-shadow: 0 40px 80px -28px rgba(0,0,0,0.25);
+    box-shadow: 0 40px 80px -28px rgba(0,0,0,0.8);
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    padding: 40px;
     }
-
-    .card:hover {
-        width: 300px;
-        height: 300px;
-     }
   
+    img {
+      width:300px;
+      height:auto;
+    }

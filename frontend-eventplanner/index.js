@@ -35,16 +35,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     })
 
-    // let eventsList = document.querySelector("#show-events")
-    // eventsList.addEventListener("click", (event) => {
-    //     let clickedElement = event.target
-    //     if (clickedElement.className === "buy-ticket") {
-    //         let eventID = clickedElement.getAttribute("event-id")
-    //         fetchBuyTicket(eventID,"1") // fake user ID
-    //         let ticketsLeft = clickedElement.previousSibling.lastChild
-    //         ticketsLeft.innerText = ticketsLeft.innerText - 1
-    //     }
-    // })
 
     document.querySelector("#nav").addEventListener("click", (event) => {
         let clickedElement = event.target
