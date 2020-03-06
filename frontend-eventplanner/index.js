@@ -436,4 +436,3 @@ function newInput(inputType,inputId,placeholderText,labelText,parentForm) { ////
     parentForm.appendChild(input)
 }
 
-})
